@@ -1,0 +1,28 @@
+{
+  "name": "bridge-troll",
+  "version": "1.0.0",
+  "description": "A friendly troll that living under Ontario's bridges",
+  "scripts": {
+    "setup-tile38": "docker pull tile38/tile38",
+    "destroy-tile38": "docker rm tile38",
+    "start-tile38": "docker run --rm -d -p 9851:9851 --name tile38 tile38/tile38 tile38-server -d /data",
+    "stop-tile38": "docker stop tile38",
+    "generate-bridge-json": "node tools/csv2json.js",
+    "preinstall": "npm run setup-tile38",
+    "prestart": "npm run start-tile38",
+    "start": "node src/server.js && npm run stop-tile38",
+    "test": "npm run lint",
+    "lint": "eslint tools src test"
+  },
+  "author": "humphd",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^4.18.2",
+    "JSONStream": "^1.3.2",
+    "csv": "^2.0.0"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "tile38": "^0.6.4"
+  }
+}
