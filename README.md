@@ -114,3 +114,12 @@ GET /nearby/43.167233/-80.275567/10000
 ```
 
 This will use a 10 km radius instead of the default 1 km.
+
+## Ideas
+
+* Add a `GET /random/:count?` that returns 1 or `count` random bridge records
+* Do something with width/length data, maybe find bridges under a certain size?
+* Bridge Avoidance system: input a route, detect if it cross any bridges (e.g., for flooding)
+* Realtime information about a bridge as you move near it (i.e., drive/walk across bridge, get an info alert)
+* "Troll Hunter" style game (Pokemon Go for bridges?), where you can collect "trolls" for each bridge.  Troll names and visuals could be procedurally generated.  Need some way to store this on a client so you can collect them.
+* Given a geographic region (e.g., county), show all bridges, listing in order of when they last got rehab
