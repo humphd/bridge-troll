@@ -6,13 +6,19 @@ module.exports.events = emitter;
 
 const GeoTree = require('geo-tree');
 const set = new GeoTree();
-set.insert(require('./bridges').map(bridge => {
-    return {
-        lat: bridge.lat,
-        lng: bridge.lng,
-        data: bridge.id
-    };
-}));
+
+/**
+ * Setup the geo data set
+ */
+module.exports.init = () => {
+    set.insert(require('./bridges').map(bridge => {
+        return {
+            lat: bridge.lat,
+            lng: bridge.lng,
+            data: bridge.id
+        };
+    }));    
+};
 
 /**
  * Given a position (`lat`, `lng`), find all bridges within a radius
@@ -29,7 +35,7 @@ const find = module.exports.find = (lat, lng, radius) => {
  * Browser Geolocation API - watch for updates to position
  */
 if ('geolocation' in navigator) {
-    navigator.geolocation.watchPosition(position => {
+    let success = position => {
         let lat = position.coords.latitude;
         let lng = position.coords.longitude;
 
@@ -39,5 +45,11 @@ if ('geolocation' in navigator) {
         if(nearby.length) {
             emitter.emit('bridges', nearby);
         }
-    });
+    };
+
+    let error = err => {
+        console.error('Error obtaining position info', err);
+    };
+
+    navigator.geolocation.watchPosition(success, error);
 }
