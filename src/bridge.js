@@ -3,6 +3,8 @@
 // Google Maps URL API - https://developers.google.com/maps/documentation/urls/guide
 const GMAPS_API_URL = 'https://www.google.com/maps/search/?api=1';
 
+// https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=-45
+
 // A lot of the bridge names have odd spacing characters
 const cleanName = name => {
     return name
@@ -32,6 +34,7 @@ class Bridge {
         // https://developers.google.com/maps/documentation/urls/guide
         let position = encodeURIComponent(`${this.lat},${this.lng}`);
         this.mapUrl = `${GMAPS_API_URL}&query=${position}`;
+        this.streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${this.lat},${this.lng}&heading=-45`;
     }
 
     // Create new Bridge from CSV record data
