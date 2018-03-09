@@ -16,6 +16,8 @@
     "csv": "^2.0.0"
   },
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "geo-tree": "^1.0.5",
+    "localforage": "^1.6.0"
   }
 }
