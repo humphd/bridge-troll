@@ -12,15 +12,12 @@ It is being used under the (Open Government Licence - Ontario](https://www.ontar
 
 ## Installation
 
-`bridge-troll` depends on node.js and [Docker](https://docs.docker.com/install/).
-After installing both, run:
+`bridge-troll` depends on node.js:
 
 ```
-npm install
-npm run setup
+$ npm install -g parcel-bundler
+$ npm install
 ```
-
-This will download the [Tile38](http://tile38.com/) [docker image](https://hub.docker.com/r/tile38/tile38/).
 
 ## Running the Server
 
@@ -29,21 +26,6 @@ To start the server, use:
 ```
 npm start
 ```
-
-This will also start the [Tile38](http://tile38.com/) docker server image. When the
-process exists, docker will stop the server, removing the running container.
-You can also manually run various docker commands:
-
-```
-# to start the server
-npm run start-tile38
-# to stop the running server
-npm run stop-tile38
-# to delete the container
-npm run destroy-tile38
-```
- 
-NOTE: in development, the tile38 server only runs when the node app is running.
 
 ## Routes
 

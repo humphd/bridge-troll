@@ -4,7 +4,8 @@
   "description": "A friendly troll that living under Ontario's bridges",
   "scripts": {
     "generate-bridge-json": "node tools/csv2json.js",
-    "start": "node src/server.js",
+    "build": "parcel build src/index.html",
+    "start": "parcel src/index.html",
     "test": "npm run lint",
     "lint": "eslint tools src test"
   },
@@ -16,8 +17,6 @@
     "csv": "^2.0.0"
   },
   "dependencies": {
-    "express": "^4.16.2",
-    "geo-tree": "^1.0.5",
-    "localforage": "^1.6.0"
+    "geo-tree": "^1.0.5"
   }
 }

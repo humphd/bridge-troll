@@ -1,5 +1,9 @@
 'use strict';
 
+const EventEmitter = require('events');
+const emitter = new EventEmitter();
+module.exports.events = emitter;
+
 const GeoTree = require('geo-tree');
 const set = new GeoTree();
 set.insert(require('./bridges').map(bridge => {
@@ -16,8 +20,24 @@ set.insert(require('./bridges').map(bridge => {
  */
 const ONE_KM = 1000;
 
-module.exports.find = (lat, lng, radius) => {
+const find = module.exports.find = (lat, lng, radius) => {
     radius = isFinite(radius) ? radius : ONE_KM;
     return set.find({lat, lng}, radius, 'm');
 };
 
+/**
+ * Browser Geolocation API - watch for updates to position
+ */
+if ('geolocation' in navigator) {
+    navigator.geolocation.watchPosition(position => {
+        let lat = position.coords.latitude;
+        let lng = position.coords.longitude;
+
+        console.info('Checking position', lat, lng);
+
+        let nearby = find(lat, lng);
+        if(nearby.length) {
+            emitter.emit('bridges', nearby);
+        }
+    });
+}
