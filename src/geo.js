@@ -18,8 +18,8 @@ const set = new GeoTree();
  * https://github.com/salsita/geo-tree#find
  */
 geo.findWithin = (p1, p2) => {
-    log.debug(`geo.findWithin p1=${p1}, p2=${p2}`);
-    return set.find(p1, p2).map(id => bridges[id]);
+  log.debug(`geo.findWithin p1=${p1}, p2=${p2}`);
+  return set.find(p1, p2).map(id => bridges[id]);
 };
 
 /**
@@ -29,70 +29,74 @@ geo.findWithin = (p1, p2) => {
 const ONE_KM = 1000;
 
 const find = (lat, lng, radius) => {
-    radius = isFinite(radius) ? radius : ONE_KM;
-    log.debug(`geo.find lat=${lat}, lng=${lng}, radius=${radius}m`);
-    return set.find({lat, lng}, radius, 'm');
+  radius = isFinite(radius) ? radius : ONE_KM;
+  log.debug(`geo.find lat=${lat}, lng=${lng}, radius=${radius}m`);
+  return set.find({ lat, lng }, radius, 'm');
 };
 
 /**
  * Browser Geolocation API - watch for updates to position
  */
 const watchPosition = () => {
-    if (!('geolocation' in navigator)) {
-        log.error('Unable to access geolocation information');
-        return;
+  if (!('geolocation' in navigator)) {
+    log.error('Unable to access geolocation information');
+    return;
+  }
+
+  let success = position => {
+    let lat = position.coords.latitude;
+    let lng = position.coords.longitude;
+    log.info(`Geolocation position update: lat=${lat}, lng=${lng}`);
+    geo.emit('position', lat, lng);
+
+    let nearby = find(lat, lng);
+    if (nearby.length) {
+      log.info('Found nearby bridge(s)', nearby);
+      geo.emit('bridges', nearby);
     }
+  };
 
-    let success = position => {
-        let lat = position.coords.latitude;
-        let lng = position.coords.longitude;
-        log.info(`Geolocation position update: lat=${lat}, lng=${lng}`);
-        geo.emit('position', lat, lng);
+  let error = err => {
+    log.error('Error obtaining geolocation position info', err);
+  };
 
-        let nearby = find(lat, lng);
-        if(nearby.length) {
-            log.info('Found nearby bridge(s)', nearby);
-            geo.emit('bridges', nearby);
-        }
-    };
-
-    let error = err => {
-        log.error('Error obtaining geolocation position info', err);
-    };
-
-    navigator.geolocation.watchPosition(success, error);
-    log.info('Starting to watch for geolocation position updates');
+  navigator.geolocation.watchPosition(success, error);
+  log.info('Starting to watch for geolocation position updates');
 };
 
 /**
  * Setup the geo data set
  */
 geo.init = () => {
-    // Process our raw bridge data into an in-memory db and geo quadtree
-    require('./bridges').forEach(record => {
-        let bridge = Bridge.fromObject(record);
-    
-        // Deal with invalid data in the dataset (not all bridges have lat/lng)
-        if(!(bridge.id && bridge.lat && bridge.lng)) {
-            log.warn(`Bridge missing data, skipping: id=${bridge.id}, lat=${bridge.lat}, lng=${bridge.lng}`);
-            return;
-        }
-    
-        // Record this bridge object in our database
-        bridges[bridge.id] = bridge;
+  // Process our raw bridge data into an in-memory db and geo quadtree
+  require('./bridges').forEach(record => {
+    let bridge = Bridge.fromObject(record);
 
-        // Also add it to our geo set with id as key
-        set.insert({
-            lat: bridge.lat,
-            lng: bridge.lng,
-            data: bridge.id
-        });
+    // Deal with invalid data in the dataset (not all bridges have lat/lng)
+    if (!(bridge.id && bridge.lat && bridge.lng)) {
+      log.warn(
+        `Bridge missing data, skipping: id=${bridge.id}, lat=${
+          bridge.lat
+        }, lng=${bridge.lng}`
+      );
+      return;
+    }
 
-        log.debug('Added Bridge', bridge);
+    // Record this bridge object in our database
+    bridges[bridge.id] = bridge;
+
+    // Also add it to our geo set with id as key
+    set.insert({
+      lat: bridge.lat,
+      lng: bridge.lng,
+      data: bridge.id
     });
 
-    // Start watching for position changes
-    watchPosition();
+    log.debug('Added Bridge', bridge);
+  });
+
+  // Start watching for position changes
+  watchPosition();
 };
 
 module.exports = geo;
