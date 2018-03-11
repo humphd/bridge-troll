@@ -11,9 +11,9 @@ const Bridge = require('../src/bridge');
 fs.createReadStream('data/2536_bridge_conditions.csv')
     .pipe(parse({
         columns: Bridge.csvLayout, // pass set of columns we defined above 
-        auto_parse: true,         // try to parse string data into JS types
-        from: 5,                  // skip the first rows of metadata, labels
-        trim: true                // trim surrounding whitespace    
+        auto_parse: true,          // try to parse string data into JS types
+        from: 5,                   // skip the first rows of metadata, labels
+        trim: true                 // trim surrounding whitespace    
     }))
     .pipe(transform(record => Bridge.fromCsvRecord(record)))
     .pipe(JSONStream.stringify())

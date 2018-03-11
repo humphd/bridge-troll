@@ -1,10 +1,5 @@
 'use strict';
 
-// Google Maps URL API - https://developers.google.com/maps/documentation/urls/guide
-const GMAPS_API_URL = 'https://www.google.com/maps/search/?api=1';
-
-// https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=-45
-
 // A lot of the bridge names have odd spacing characters
 const cleanName = name => {
     return name
@@ -15,25 +10,17 @@ const cleanName = name => {
 };
 
 class Bridge {
-    constructor(id, name, hwy, lat, lng, material, type, built, majorRehab,
-        minorRehab, length, width)
+    constructor(id, name, lat, lng, year, length, width)
     {
         this.id = id;
         this.name = cleanName(name);
-        this.hwy = hwy;
         this.lat = lat;
         this.lng = lng;
-        this.material = material;
-        this.type = type;
-        this.built = built;
-        this.majorRehab = majorRehab;
-        this.minorRehab = minorRehab;
+        this.year = year;
         this.length = length;
         this.width = width;
 
         // https://developers.google.com/maps/documentation/urls/guide
-        let position = encodeURIComponent(`${this.lat},${this.lng}`);
-        this.mapUrl = `${GMAPS_API_URL}&query=${position}`;
         this.streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${this.lat},${this.lng}&heading=-45`;
     }
 
@@ -42,14 +29,9 @@ class Bridge {
         return new Bridge(
             record['id'],
             record['structure'],
-            record['hwy_name'],
             record['latitude'],
             record['longitude'],
-            record['material1'],
-            record['type1'],
             record['year_built'],
-            record['last_major_rehab'],
-            record['last_minor_rehab'],
             record['deck_length'],
             record['width']
         );
@@ -60,14 +42,9 @@ class Bridge {
         return new Bridge(
             obj.id,
             obj.name,
-            obj.hwy,
             obj.lat,
             obj.lng,
-            obj.material,
-            obj.type,
             obj.built,
-            obj.majorRehab,
-            obj.minorRehab,
             obj.length,
             obj.width
         );

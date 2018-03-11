@@ -15,7 +15,6 @@ It is being used under the (Open Government Licence - Ontario](https://www.ontar
 `bridge-troll` depends on node.js:
 
 ```
-$ npm install -g parcel-bundler
 $ npm install
 ```
 
