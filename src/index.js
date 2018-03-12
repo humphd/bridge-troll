@@ -12,36 +12,36 @@ if (logLevel) {
   log.setLevel(logLevel);
 }
 
-const findNearbyBridges = (p1, p2) => {
-  let bridges = geo.findWithin(p1, p2);
-  bridges.forEach(bridge => {
+// Listen for updates to the map's bounding box (viewable area)
+// and check for bridges within it that need to be shown.
+map.on('update', bounds => {
+  let p1 = bounds._northEast;
+  let p2 = bounds._southWest;
+
+  geo.findWithin(p1, p2).forEach(bridge => {
     map.addMarker(bridge.lat, bridge.lng, bridge);
   });
+});
+
+// Wait until we know where we are, then show the map centred on that point
+geo.once('position', (lat, lng) => {
+  // Load a map, centered on our current position
+  map.init(lat, lng);
+
+  // Stop showing the startup spinner now that map is drawn
+  log.info('Removing loading spinner');
+  document.querySelector('.loading-spinner').style.display = 'none';
+});
+
+// Continuously listen for bridges nearby
+geo.on('bridges', nearby => {
+  log.info('Bridge(s) detected nearby', nearby);
+});
+
+const onReady = () => {
+  geo.init();
+  log.info('Waiting for initial position to show map...');
 };
 
 // Wait for the DOM to be loaded before we start anything with the map UI
-document.addEventListener('DOMContentLoaded', () => {
-  geo.init();
-
-  // Once we know where we are, show the map centred on that point
-  geo.once('position', (lat, lng) => {
-    // Listen for updates to the map, and check for bridges to show
-    map.on('update', bounds => {
-      findNearbyBridges(bounds._northEast, bounds._southWest);
-    });
-
-    // Load a map, centered on our current position
-    map.init(lat, lng);
-
-    // Stop showing the startup spinner
-    log.info('Removing loading spinner');
-    document.querySelector('.loading-spinner').style.display = 'none';
-  });
-
-  // Listen for bridges nearby
-  geo.on('bridges', nearby => {
-    log.info('Bridge(s) detected nearby', nearby);
-  });
-
-  log.info('Waiting for initial position to show map...');
-});
+document.addEventListener('DOMContentLoaded', onReady);

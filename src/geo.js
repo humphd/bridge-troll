@@ -16,6 +16,12 @@ const set = new GeoTree();
 /**
  * Find all bridges within a bounding box.  p1 and p2 should be diagonal
  * opposite points, defining the box:
+ * 
+ *  +------------------------------p2
+ *  |                              |
+ *  |                              |
+ *  p1-----------------------------+
+ * 
  * https://github.com/salsita/geo-tree#find
  */
 module.exports.findWithin = (p1, p2) => {
@@ -28,7 +34,6 @@ module.exports.findWithin = (p1, p2) => {
  * of `radius` metres, or 1 KM if not specified.
  */
 const ONE_KM = 1000;
-
 const find = (lat, lng, radius) => {
   radius = isFinite(radius) ? radius : ONE_KM;
   log.debug(`geo.find lat=${lat}, lng=${lng}, radius=${radius}m`);
