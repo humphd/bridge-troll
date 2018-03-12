@@ -8,7 +8,7 @@ Government of Ontario website:
 
 https://www.ontario.ca/data/bridge-conditions
 
-It is being used under the (Open Government Licence - Ontario](https://www.ontario.ca/page/open-government-licence-ontario)
+It is being used under the [Open Government Licence - Ontario](https://www.ontario.ca/page/open-government-licence-ontario)
 
 ## Installation
 
