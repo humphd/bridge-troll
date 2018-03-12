@@ -15,42 +15,42 @@ const Bridge = require('../src/bridge');
 // Table structure for https://www.ontario.ca/data/bridge-conditions CSV file.
 // We parse, but ignore most of this.
 const columns = [
-    'id',
-    'structure',
-    'hwy_name',
-    'latitude',
-    'longitude',
-    'category',
-    'subcategory1',
-    'type1',
-    'material1',
-    'year_built',
-    'last_major_rehab',
-    'last_minor_rehab',
-    'spans',
-    'span_details',
-    'deck_length',
-    'width',
-    'region',
-    'county',
-    'status',
-    'owner',
-    'last_inspection_date',
-    'current_bci',
-    '2013',
-    '2012',
-    '2011',
-    '2010',
-    '2009',
-    '2008',
-    '2007',
-    '2006',
-    '2005',
-    '2004',
-    '2003',
-    '2002',
-    '2001',
-    '2000'
+  'id',
+  'structure',
+  'hwy_name',
+  'latitude',
+  'longitude',
+  'category',
+  'subcategory1',
+  'type1',
+  'material1',
+  'year_built',
+  'last_major_rehab',
+  'last_minor_rehab',
+  'spans',
+  'span_details',
+  'deck_length',
+  'width',
+  'region',
+  'county',
+  'status',
+  'owner',
+  'last_inspection_date',
+  'current_bci',
+  '2013',
+  '2012',
+  '2011',
+  '2010',
+  '2009',
+  '2008',
+  '2007',
+  '2006',
+  '2005',
+  '2004',
+  '2003',
+  '2002',
+  '2001',
+  '2000'
 ];
 
 fs
@@ -66,5 +66,7 @@ fs
   .pipe(transform(record => Bridge.fromCsvRecord(record)))
   .pipe(JSONStream.stringify())
   .pipe(fs.createWriteStream(jsonOutput))
-  .on('error', err => console.log(`Error writing ${jsonOutput}: ${err.message}`))
+  .on('error', err =>
+    console.log(`Error writing ${jsonOutput}: ${err.message}`)
+  )
   .on('finish', () => console.log(`Wrote ${jsonOutput}`));

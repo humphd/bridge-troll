@@ -19,11 +19,14 @@ class Bridge {
     // TODO: perhaps we can use these dimensions when comparing geo position?
     this.length = length;
     this.width = width;
+  }
+
+  get streetViewUrl() {
+    let lat = this.lat;
+    let lng = this.lng;
 
     // https://developers.google.com/maps/documentation/urls/guide
-    this.streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${
-      this.lat
-    },${this.lng}&heading=-45`;
+    return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=-45`;
   }
 
   // Create new Bridge from CSV record data
