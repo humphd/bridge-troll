@@ -12,10 +12,11 @@ const cleanName = name => {
 class Bridge {
   constructor(id, name, lat, lng, year, length, width) {
     this.id = id;
-    this.name = cleanName(name);
+    // Format name like: "Bridge Name [1965]"
+    this.name = `${cleanName(name)} [${year}]`;
     this.lat = lat;
     this.lng = lng;
-    this.year = year;
+    // TODO: perhaps we can use these dimensions when comparing geo position?
     this.length = length;
     this.width = width;
 
@@ -49,48 +50,6 @@ class Bridge {
       obj.length,
       obj.width
     );
-  }
-
-  // Table structure for https://www.ontario.ca/data/bridge-conditions CSV file
-  static get csvLayout() {
-    return [
-      'id',
-      'structure',
-      'hwy_name',
-      'latitude',
-      'longitude',
-      'category',
-      'subcategory1',
-      'type1',
-      'material1',
-      'year_built',
-      'last_major_rehab',
-      'last_minor_rehab',
-      'spans',
-      'span_details',
-      'deck_length',
-      'width',
-      'region',
-      'county',
-      'status',
-      'owner',
-      'last_inspection_date',
-      'current_bci',
-      '2013',
-      '2012',
-      '2011',
-      '2010',
-      '2009',
-      '2008',
-      '2007',
-      '2006',
-      '2005',
-      '2004',
-      '2003',
-      '2002',
-      '2001',
-      '2000'
-    ];
   }
 }
 

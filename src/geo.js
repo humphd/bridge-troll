@@ -1,14 +1,15 @@
 'use strict';
 
+const log = require('./log');
+
 // Expose `bridge` events when we pass nearby known bridge(s)
 const EventEmitter = require('events');
-const geo = new EventEmitter();
+module.exports = new EventEmitter();
 
-const log = require('./log');
 const Bridge = require('./bridge');
 const bridges = {};
 
-// API docs at https://github.com/salsita/geo-tree
+// Quadtree API docs at https://github.com/salsita/geo-tree
 const GeoTree = require('geo-tree');
 const set = new GeoTree();
 
@@ -17,7 +18,7 @@ const set = new GeoTree();
  * opposite points, defining the box:
  * https://github.com/salsita/geo-tree#find
  */
-geo.findWithin = (p1, p2) => {
+module.exports.findWithin = (p1, p2) => {
   log.debug(`geo.findWithin p1=${p1}, p2=${p2}`);
   return set.find(p1, p2).map(id => bridges[id]);
 };
@@ -35,11 +36,12 @@ const find = (lat, lng, radius) => {
 };
 
 /**
- * Browser Geolocation API - watch for updates to position
+ * Browser Geolocation API - watch for live updates to position
  */
 const watchPosition = () => {
   if (!('geolocation' in navigator)) {
     log.error('Unable to access geolocation information');
+    // TODO: should probably emit an `error` event or something
     return;
   }
 
@@ -47,12 +49,12 @@ const watchPosition = () => {
     let lat = position.coords.latitude;
     let lng = position.coords.longitude;
     log.info(`Geolocation position update: lat=${lat}, lng=${lng}`);
-    geo.emit('position', lat, lng);
+    module.exports.emit('position', lat, lng);
 
     let nearby = find(lat, lng);
     if (nearby.length) {
       log.info('Found nearby bridge(s)', nearby);
-      geo.emit('bridges', nearby);
+      module.exports.emit('bridges', nearby);
     }
   };
 
@@ -65,9 +67,11 @@ const watchPosition = () => {
 };
 
 /**
- * Setup the geo data set
+ * Setup the geo data set.  Import raw bridge records, convert to Bridge
+ * instance objects, and add to geo quadtree.  Also begin watching for
+ * live updates to current geolocation positioning.
  */
-geo.init = () => {
+module.exports.init = () => {
   // Process our raw bridge data into an in-memory db and geo quadtree
   require('./bridges').forEach(record => {
     let bridge = Bridge.fromObject(record);
@@ -98,5 +102,3 @@ geo.init = () => {
   // Start watching for position changes
   watchPosition();
 };
-
-module.exports = geo;

@@ -1,18 +1,63 @@
 'use strict';
 
+// Parse the CSV file, filter out unnecessary columns, and write as JSON
+
 const fs = require('fs');
+const csvInput = 'data/2536_bridge_conditions.csv';
+const jsonOutput = 'data/bridge-data.json';
+
 const parse = require('csv-parse');
 const transform = require('stream-transform');
 const JSONStream = require('JSONStream');
 
 const Bridge = require('../src/bridge');
 
-// Parse the CSV file, filter out unnecessary columns, and write as JSON
+// Table structure for https://www.ontario.ca/data/bridge-conditions CSV file.
+// We parse, but ignore most of this.
+const columns = [
+    'id',
+    'structure',
+    'hwy_name',
+    'latitude',
+    'longitude',
+    'category',
+    'subcategory1',
+    'type1',
+    'material1',
+    'year_built',
+    'last_major_rehab',
+    'last_minor_rehab',
+    'spans',
+    'span_details',
+    'deck_length',
+    'width',
+    'region',
+    'county',
+    'status',
+    'owner',
+    'last_inspection_date',
+    'current_bci',
+    '2013',
+    '2012',
+    '2011',
+    '2010',
+    '2009',
+    '2008',
+    '2007',
+    '2006',
+    '2005',
+    '2004',
+    '2003',
+    '2002',
+    '2001',
+    '2000'
+];
+
 fs
-  .createReadStream('data/2536_bridge_conditions.csv')
+  .createReadStream(csvInput)
   .pipe(
     parse({
-      columns: Bridge.csvLayout, // pass set of columns we defined above
+      columns, // pass set of columns we defined above
       auto_parse: true, // try to parse string data into JS types
       from: 5, // skip the first rows of metadata, labels
       trim: true // trim surrounding whitespace
@@ -20,6 +65,6 @@ fs
   )
   .pipe(transform(record => Bridge.fromCsvRecord(record)))
   .pipe(JSONStream.stringify())
-  .pipe(fs.createWriteStream('data/bridge-data.json'))
-  .on('error', err => console.log('Error writing JSON data: ' + err.message))
-  .on('finish', () => console.log('Wrote data/bridge-data.json'));
+  .pipe(fs.createWriteStream(jsonOutput))
+  .on('error', err => console.log(`Error writing ${jsonOutput}: ${err.message}`))
+  .on('finish', () => console.log(`Wrote ${jsonOutput}`));

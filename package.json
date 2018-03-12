@@ -5,15 +5,19 @@
   "scripts": {
     "generate-bridge-json": "node tools/csv2json.js",
     "build": "parcel build src/index.html",
-    "start": "parcel src/index.html",
+    "eslint": "eslint tools src test",
+    "prettier": "prettier --single-quote --write '{tools,src,test}/**/*.{js,css}'",
+    "check-prettier": "prettier --single-quote --list-different '{tools,src,test}/**/*.{js,css}'",
+    "lint": "npm run eslint && npm run check-prettier",
     "test": "npm run lint",
-    "lint": "eslint tools src test",
-    "prettier": "prettier --single-quote --write '{tools,src,test}/**/*.{js,css}'"
+    "start": "parcel src/index.html"
   },
   "author": "humphd",
   "license": "MIT",
   "devDependencies": {
     "JSONStream": "^1.3.2",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "csv": "^2.0.0",
     "eslint": "^4.18.2",
     "parcel-bundler": "^1.6.2",
