@@ -6,7 +6,8 @@ const leaflet = require('leaflet');
 const fs = require('fs');
 
 /**
- * Given SVG content generate a data URL
+ * Given SVG content generate a data URL. If you're not familiar with
+ * Data URLs, see https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
  */
 const generateSvgUrl = svg => {
   let base64 = btoa(svg);

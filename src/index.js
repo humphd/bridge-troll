@@ -28,16 +28,17 @@ map.on('update', bounds => {
 
     // Click handler for when the user clicks on this bridge marker
     let onClick = () => {
-      log.debug('marker.click', bridge.streetViewUrl);
-      window.open(bridge.streetViewUrl);
+      let url = bridge.streetViewUrl;
+      log.debug('marker.click', bridge, url);
+      window.open(url);
     };
 
     // Add a new marker to the map for this bridge
     bridge.marker = map.addMarker(
       bridge.lat,
       bridge.lng,
-      bridge.name,
-      svgMarker.locked,
+      bridge.title,
+      svgMarker.locked, // TODO: deal with locked vs. unlocked
       onClick
     );
   });

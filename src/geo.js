@@ -41,7 +41,8 @@ const find = (lat, lng, radius) => {
 };
 
 /**
- * Browser Geolocation API - watch for live updates to position
+ * Browser Geolocation API - watch for live updates to position.
+ * https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation
  */
 const watchPosition = () => {
   if (!('geolocation' in navigator)) {
