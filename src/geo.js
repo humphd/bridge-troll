@@ -16,12 +16,12 @@ const set = new GeoTree();
 /**
  * Find all bridges within a bounding box.  p1 and p2 should be diagonal
  * opposite points, defining the box:
- * 
+ *
  *  +------------------------------p2
  *  |                              |
  *  |                              |
  *  p1-----------------------------+
- * 
+ *
  * https://github.com/salsita/geo-tree#find
  */
 module.exports.findWithin = (p1, p2) => {

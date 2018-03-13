@@ -9,7 +9,10 @@ const leaflet = require('leaflet');
 const attribution =
   '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
+const svgMarker = require('./svg-marker');
+
 let map;
+let currentLocationMarker;
 
 const onMapUpdated = () => {
   let bounds = map.getBounds();
@@ -17,8 +20,23 @@ const onMapUpdated = () => {
   module.exports.emit('update', bounds);
 };
 
+/**
+ * Creates the map and positions the location marker
+ * @param {*} lat
+ * @param {*} lng
+ */
 module.exports.init = (lat, lng) => {
-  map = leaflet.map('map');
+  // http://leafletjs.com/reference-1.3.0.html#map
+  map = leaflet.map('map', {
+    // Disable zoom, pan, and other manual interaction methods.
+    zoomControl: false,
+    boxZoom: false,
+    dragging: false,
+    doubleClickZoom: false,
+    keyboard: false,
+    scrollWheelZoom: false,
+    touchZoom: false
+  });
 
   // http://leafletjs.com/reference-1.3.0.html#map-event
   map.on('viewreset', onMapUpdated);
@@ -28,26 +46,44 @@ module.exports.init = (lat, lng) => {
   leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
 
   map.setView([lat, lng], 13);
-  log.info(`Map initialized with centre lat=${lat}, lng=${lng}`);
-};
 
-module.exports.addMarker = (lat, lng, bridge) => {
-  // Don't add a marker for this bridge if we already have one.
-  if (bridge.marker) {
-    log.debug('map.addMarker - skipping, bridge.marker already exists');
-    return;
-  }
-
-  bridge.marker = leaflet
+  // Show a marker at our current location
+  currentLocationMarker = leaflet
     .marker([lat, lng], {
-      title: bridge.name
+      title: 'Current Location',
+      icon: svgMarker.location
     })
     .addTo(map);
 
-  bridge.marker.on('click', () => {
-    log.debug('popup.click', bridge.streetViewUrl);
-    window.open(bridge.streetViewUrl);
-  });
+  log.info(`Map initialized with centre lat=${lat}, lng=${lng}`);
+};
 
-  log.info('Added marker for bridge', bridge);
+/**
+ * Adds and returns a marker to the map.
+ */
+module.exports.addMarker = (lat, lng, title, icon, onClick) => {
+  let marker = leaflet
+    .marker([lat, lng], {
+      title,
+      icon
+    })
+    .addTo(map);
+
+  // Wire-up a click handler for this marker
+  if (onClick) {
+    marker.on('click', onClick);
+  }
+
+  log.debug(`Added marker title=${title} at lat=${lat}, lng=${lng}`);
+
+  return marker;
+};
+
+/**
+ * Re-centre the map and update location marker
+ */
+module.exports.setCurrentLocation = (lat, lng) => {
+  currentLocationMarker.setLatLng({ lat, lng });
+  map.setView([lat, lng], 13);
+  log.debug(`Moved current location marker to lat=${lat}, lng=${lng}`);
 };

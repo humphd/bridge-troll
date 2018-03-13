@@ -3,6 +3,7 @@
 const geo = require('./geo');
 const map = require('./map');
 const log = require('./log');
+const svgMarker = require('./svg-marker');
 
 // Support setting logging level via the query string ?loglevel=warn (or debug, error, info)
 let queryString = document.location.search;
@@ -19,7 +20,26 @@ map.on('update', bounds => {
   let p2 = bounds._southWest;
 
   geo.findWithin(p1, p2).forEach(bridge => {
-    map.addMarker(bridge.lat, bridge.lng, bridge);
+    // Don't add a marker for this bridge if we already have one.
+    if (bridge.marker) {
+      log.debug('map.addMarker - skipping, bridge.marker already exists');
+      return;
+    }
+
+    // Click handler for when the user clicks on this bridge marker
+    let onClick = () => {
+      log.debug('marker.click', bridge.streetViewUrl);
+      window.open(bridge.streetViewUrl);
+    };
+
+    // Add a new marker to the map for this bridge
+    bridge.marker = map.addMarker(
+      bridge.lat,
+      bridge.lng,
+      bridge.name,
+      svgMarker.locked,
+      onClick
+    );
   });
 });
 
@@ -31,10 +51,16 @@ geo.once('position', (lat, lng) => {
   // Stop showing the startup spinner now that map is drawn
   log.info('Removing loading spinner');
   document.querySelector('.loading-spinner').style.display = 'none';
+
+  // Start listening for regular updates to geo position data
+  geo.on('position', (lat, lng) => {
+    map.setCurrentLocation(lat, lng);
+  });
 });
 
 // Continuously listen for bridges nearby
 geo.on('bridges', nearby => {
+  // TODO: need to do collision detection
   log.info('Bridge(s) detected nearby', nearby);
 });
 
