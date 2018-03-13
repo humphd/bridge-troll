@@ -61,8 +61,13 @@ geo.once('position', (lat, lng) => {
 
 // Continuously listen for bridges nearby
 geo.on('bridges', nearby => {
-  // TODO: need to do collision detection
-  log.info('Bridge(s) detected nearby', nearby);
+  nearby.forEach(bridge => {
+    // TODO: need to persist this between sessions.
+    // For now just unlock the icon
+    if(bridge.marker) {
+      bridge.marker.setIcon(svgMarker.unlocked);
+    }
+  });
 });
 
 const onReady = () => {

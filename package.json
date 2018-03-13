@@ -10,7 +10,8 @@
     "check-prettier": "prettier --single-quote --list-different '{tools,src,test}/**/*.{js,css}'",
     "lint": "npm run eslint && npm run check-prettier",
     "test": "npm run lint",
-    "start": "parcel src/index.html"
+    "start": "parcel src/index.html",
+    "debug": "FAKE_GEO=1 parcel src/index.html"
   },
   "author": "humphd",
   "license": "MIT",

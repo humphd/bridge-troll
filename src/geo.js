@@ -42,7 +42,7 @@ const ONE_KM = 1000;
 const find = (lat, lng, radius) => {
   radius = isFinite(radius) ? radius : ONE_KM;
   log.debug(`geo.find lat=${lat}, lng=${lng}, radius=${radius}m`);
-  return set.find({ lat, lng }, radius, 'm');
+  return set.find({ lat, lng }, radius, 'm').map(id => bridges[id]);
 };
 
 /**
@@ -62,7 +62,8 @@ const watchPosition = () => {
     log.info(`Geolocation position update: lat=${lat}, lng=${lng}`);
     module.exports.emit('position', lat, lng);
 
-    let nearby = find(lat, lng);
+    // Look 50m nearby for any bridges to collect
+    let nearby = find(lat, lng, 50);
     if (nearby.length) {
       log.info('Found nearby bridge(s)', nearby);
       module.exports.emit('bridges', nearby);

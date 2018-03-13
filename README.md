@@ -45,7 +45,7 @@ http://localhost:1234?loglevel=error
 You can configure geolocation to work manually vs. automatically in the browser:
 
 ```
-FAKE_GEO=1 npm start
+npm run debug
 ```
 
 You can now double-click on the map to move your position, and also use
