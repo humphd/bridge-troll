@@ -27,6 +27,7 @@ const updateCallers = (type, arg) => {
   });
 };
 
+// Provide an API devs can call from unit tests or the console
 window.fakeGeo = {
   moveTo: (lat, lng) =>
     updateCallers('success', { coords: { latitude: lat, longitude: lng } }),
