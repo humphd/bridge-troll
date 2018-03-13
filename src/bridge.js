@@ -12,10 +12,10 @@ const cleanName = name => {
 class Bridge {
   constructor(id, name, lat, lng, year, length, width) {
     this.id = id;
-    // Format name like: "Bridge Name [1965]"
-    this.name = `${cleanName(name)} [${year}]`;
+    this.name = cleanName(name);
     this.lat = lat;
     this.lng = lng;
+    this.year = year;
     // TODO: perhaps we can use these dimensions when comparing geo position?
     this.length = length;
     this.width = width;
@@ -27,6 +27,10 @@ class Bridge {
 
     // https://developers.google.com/maps/documentation/urls/guide
     return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=-45`;
+  }
+
+  get title() {
+    return `${this.name} [${this.year}]`;
   }
 
   // Create new Bridge from CSV record data
@@ -49,7 +53,7 @@ class Bridge {
       obj.name,
       obj.lat,
       obj.lng,
-      obj.built,
+      obj.year,
       obj.length,
       obj.width
     );
