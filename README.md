@@ -18,16 +18,6 @@ It is being used under the [Open Government Licence - Ontario](https://www.ontar
 $ npm install
 ```
 
-## Building the Site
-
-To build the site's resources in to `dist/`, do the following:
-
-```
-npm run build
-```
-
-You can now serve the contents of `dist/` as a website
-
 ## Development
 
 To run the web site in dev mode, use:
@@ -38,3 +28,34 @@ npm start
 
 This will build the site's resources, start a development web server
 at `http://localhost:1234`, and also watch for changes that need to be rebuilt.
+
+You can use various `npm scripts` to help accomplishing things:
+
+```
+npm run generate-bridge-json
+    parse data/2536_bridge_conditions.csv into data/bridge-data.json
+
+npm run build
+    bundle index.html into dist/ (suitable for production)
+
+npm run eslint
+    run eslint and report any errors
+
+npm run prettier
+    run prettier on all source files, fixing any formatting issues
+
+npm run lint
+    check that all flies pass eslint and prettier
+```
+
+## Logging
+
+You can enable different log levels, and see more info in the browser `console`.
+Via the query string, set your desired log level:
+
+```
+http://localhost:1234?loglevel=debug
+http://localhost:1234?loglevel=warn
+http://localhost:1234?loglevel=info
+http://localhost:1234?loglevel=error
+```
