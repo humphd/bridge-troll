@@ -41,7 +41,9 @@ module.exports.init = (lat, lng) => {
   // http://leafletjs.com/reference-1.3.0.html#map-event
   map.on('viewreset', onMapUpdated);
   map.on('moveend', onMapUpdated);
-
+  map.on('click', e => module.exports.emit('click', e));
+  map.on('dblclick', e => module.exports.emit('dblclick', e));
+  
   let tileUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
   leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
 

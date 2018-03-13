@@ -13,6 +13,11 @@ const bridges = {};
 const GeoTree = require('geo-tree');
 const set = new GeoTree();
 
+// Allow manual override of the geolocation API.  Use FAKE_GEO=1
+if (process.env.FAKE_GEO == 1) {
+  require('./fake-geolocation');
+}
+
 /**
  * Find all bridges within a bounding box.  p1 and p2 should be diagonal
  * opposite points, defining the box:

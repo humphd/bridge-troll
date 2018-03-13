@@ -29,6 +29,30 @@ npm start
 This will build the site's resources, start a development web server
 at `http://localhost:1234`, and also watch for changes that need to be rebuilt.
 
+### Logging
+
+You can enable different log levels, and see more info in the browser `console`.
+Via the query string, set your desired log level:
+
+```
+http://localhost:1234?loglevel=debug
+http://localhost:1234?loglevel=warn
+http://localhost:1234?loglevel=info
+http://localhost:1234?loglevel=error
+```
+### Override Geolocation Data for testing
+
+You can configure geolocation to work manually vs. automatically in the browser:
+
+```
+FAKE_GEO=1 npm start
+```
+
+You can now double-click on the map to move your position, and also use
+`window.fakeGeo` methods from the console.
+
+### Scripts
+
 You can use various `npm scripts` to help accomplishing things:
 
 ```
@@ -48,14 +72,3 @@ npm run lint
     check that all flies pass eslint and prettier
 ```
 
-## Logging
-
-You can enable different log levels, and see more info in the browser `console`.
-Via the query string, set your desired log level:
-
-```
-http://localhost:1234?loglevel=debug
-http://localhost:1234?loglevel=warn
-http://localhost:1234?loglevel=info
-http://localhost:1234?loglevel=error
-```
