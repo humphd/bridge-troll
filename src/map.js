@@ -14,6 +14,12 @@ const svgMarker = require('./svg-marker');
 let map;
 let currentLocationMarker;
 
+// TODO: I'm not sure what the ideal zoom level is.  Leaflet often uses 13
+// in docs and tutorials.  14 seems to provide a bit more context
+// We need something that makes sense for the scale of bridges
+// and a person/car/vehicle moving between them.
+const zoomLevel = 16;
+
 const onMapUpdated = () => {
   let bounds = map.getBounds();
   log.debug('map update event', bounds);
@@ -47,7 +53,7 @@ module.exports.init = (lat, lng) => {
   let tileUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
   leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
 
-  map.setView([lat, lng], 13);
+  map.setView([lat, lng], zoomLevel);
 
   // Show a marker at our current location
   currentLocationMarker = leaflet
@@ -86,6 +92,6 @@ module.exports.addMarker = (lat, lng, title, icon, onClick) => {
  */
 module.exports.setCurrentLocation = (lat, lng) => {
   currentLocationMarker.setLatLng({ lat, lng });
-  map.setView([lat, lng], 13);
+  map.setView([lat, lng], zoomLevel);
   log.debug(`Moved current location marker to lat=${lat}, lng=${lng}`);
 };
