@@ -72,4 +72,3 @@ module.exports.watchPosition = () => {
  * Add a record to our quadtree set for this item.
  */
 module.exports.insert = (lat, lng, data) => set.insert(lat, lng, data);
-

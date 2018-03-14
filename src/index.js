@@ -17,7 +17,7 @@ map.on('update', bounds => {
   geo.findWithin(p1, p2).forEach(id => {
     let bridge = bridges[id];
     log.debug('Found bridge within map bounds', bridge);
-    
+
     // Don't add a marker for this bridge if we already have one.
     if (bridge.marker) {
       log.debug('Skipping adding bridge.marker, already exists');
