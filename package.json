@@ -11,7 +11,7 @@
     "lint": "npm run eslint && npm run check-prettier",
     "test": "npm run lint",
     "start": "parcel src/index.html",
-    "debug": "FAKE_GEO=1 parcel src/index.html"
+    "debug": "cross-env FAKE_GEO=1 parcel src/index.html"
   },
   "author": "humphd",
   "license": "MIT",
@@ -19,6 +19,7 @@
     "JSONStream": "^1.3.2",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "cross-env": "^5.1.4",
     "csv": "^2.0.0",
     "eslint": "^4.18.2",
     "parcel-bundler": "^1.6.2",
