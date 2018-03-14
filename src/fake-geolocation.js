@@ -3,7 +3,9 @@
 const log = require('./log');
 const map = require('./map');
 
-log.info('Override Geolocation. Use `window.fakeGeo` in console or double-click map to move');
+log.info(
+  'Override Geolocation. Use `window.fakeGeo` in console or double-click map to move'
+);
 
 const callbacks = [];
 

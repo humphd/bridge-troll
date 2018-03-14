@@ -5,13 +5,8 @@ const map = require('./map');
 const log = require('./log');
 const svgMarker = require('./svg-marker');
 
-// Support setting logging level via the query string ?loglevel=warn (or debug, error, info)
-let queryString = document.location.search;
-let matches = /loglevel=([^&]+)/.exec(queryString);
-let logLevel = matches && matches[1];
-if (logLevel) {
-  log.setLevel(logLevel);
-}
+const Bridge = require('./bridge');
+const bridges = {};
 
 // Listen for updates to the map's bounding box (viewable area)
 // and check for bridges within it that need to be shown.
@@ -19,10 +14,13 @@ map.on('update', bounds => {
   let p1 = bounds._northEast;
   let p2 = bounds._southWest;
 
-  geo.findWithin(p1, p2).forEach(bridge => {
+  geo.findWithin(p1, p2).forEach(id => {
+    let bridge = bridges[id];
+    log.debug('Found bridge within map bounds', bridge);
+    
     // Don't add a marker for this bridge if we already have one.
     if (bridge.marker) {
-      log.debug('map.addMarker - skipping, bridge.marker already exists');
+      log.debug('Skipping adding bridge.marker, already exists');
       return;
     }
 
@@ -38,7 +36,7 @@ map.on('update', bounds => {
       bridge.lat,
       bridge.lng,
       bridge.title,
-      svgMarker.locked, // TODO: deal with locked vs. unlocked
+      svgMarker.locked,
       onClick
     );
   });
@@ -56,23 +54,53 @@ geo.once('position', (lat, lng) => {
   // Start listening for regular updates to geo position data
   geo.on('position', (lat, lng) => {
     map.setCurrentLocation(lat, lng);
-  });
-});
 
-// Continuously listen for bridges nearby
-geo.on('bridges', nearby => {
-  nearby.forEach(bridge => {
-    // TODO: need to persist this between sessions.
-    // For now just unlock the icon
-    if(bridge.marker) {
-      bridge.marker.setIcon(svgMarker.unlocked);
-    }
+    // Look 50m nearby for any bridges to collect
+    geo.findNearby(lat, lng, 50).forEach(id => {
+      let bridge = bridges[id];
+      log.debug('Found nearby bridge', bridge);
+
+      // TODO: need to persist this between sessions.
+      // For now just unlock the icon.  Also would be nice
+      // to have some kind of animation or other UI indication.
+      if (bridge.marker) {
+        log.info('Unlocking bridge', bridge);
+        bridge.marker.setIcon(svgMarker.unlocked);
+      }
+    });
   });
 });
 
 const onReady = () => {
-  geo.init();
+  // Process our raw bridge data into an in-memory db and geo quadtree
+  require('./bridges').forEach(record => {
+    let bridge = Bridge.fromObject(record);
+
+    // Deal with invalid data in the dataset (not all bridges have lat/lng)
+    if (!(bridge.id && bridge.lat && bridge.lng)) {
+      log.warn(
+        `Bridge missing data, skipping: id=${bridge.id}, lat=${
+          bridge.lat
+        }, lng=${bridge.lng}`
+      );
+      return;
+    }
+
+    // Record this bridge object in our database
+    bridges[bridge.id] = bridge;
+
+    // Also add it to our geo set with id as key
+    geo.insert({
+      lat: bridge.lat,
+      lng: bridge.lng,
+      data: bridge.id
+    });
+
+    log.debug('Added Bridge', bridge);
+  });
+
   log.info('Waiting for initial position to show map...');
+  geo.watchPosition();
 };
 
 // Wait for the DOM to be loaded before we start anything with the map UI
