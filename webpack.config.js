@@ -7,23 +7,20 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader'
-        ]
+        use: ['style-loader', 'css-loader']
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: 'babel-loader'
         }
       },
       {
         test: /\.html$/,
         use: [
           {
-            loader: "html-loader",
+            loader: 'html-loader',
             options: { minimize: true }
           }
         ]
@@ -42,20 +39,18 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif)$/,
-        use: [
-          'file-loader'
-        ]
+        use: ['file-loader']
       }
     ]
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
-    new HtmlWebPackPlugin({template: './src/index.html'}),
+    new HtmlWebPackPlugin({ template: './src/index.html' }),
     new webpack.DefinePlugin({
       'process.env': {
         'DEBUG': JSON.stringify(process.env.DEBUG)
       }
     })
   ],
-  devtool: "source-map"
+  devtool: 'source-map'
 };
