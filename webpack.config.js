@@ -1,5 +1,6 @@
-const HtmlWebPackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   module: {
@@ -48,6 +49,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new CleanWebpackPlugin(['dist']),
     new HtmlWebPackPlugin({template: './src/index.html'}),
     new webpack.DefinePlugin({
       'process.env': {
