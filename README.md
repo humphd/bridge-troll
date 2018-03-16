@@ -73,6 +73,11 @@ This will run a few things:
 
 After the tests have finished, a test code coverage report will be generated in `coverage/index.html`
 and will show you which parts of the code are being run during testing, and which are not.
+You can see a graphical coverage report by doing:
+
+```
+npm run coverage
+```
 
 See below for other ways to run these. 
 
