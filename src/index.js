@@ -4,6 +4,7 @@ const geo = require('./geo');
 const map = require('./map');
 const log = require('./log');
 const svgMarker = require('./svg-marker');
+const SunCalc = require('suncalc');
 
 const Bridge = require('./bridge');
 const bridges = {};
@@ -31,12 +32,35 @@ map.on('update', bounds => {
       window.open(url);
     };
 
+    //getting the sunCalc object
+    var times = SunCalc.getTimes(new Date(), bridge.lat, bridge.lng);
+    var date = new Date();
+
+    var sunriseTime = (times.sunrise.getHours() * 10) + times.sunrise.getMinutes();
+    var sunsetTime = (times.sunset.getHours() * 10) + times.sunset.getMinutes();
+    var currentTime = (date.getHours() * 10) + date.getHours();
+    //var currentTime = 225;
+
+    log.info(`SunRise Time=${sunriseTime}`);
+    log.info(`SunSet Time=${sunsetTime}`);
+    log.info(`Current Time=${currentTime}`);
+
+    var lockedMarker;
+    if ((currentTime - sunsetTime) < 0 && (currentTime - sunriseTime) > 0) {
+      //if day
+      lockedMarker = svgMarker.lockedDay;
+    } else {
+      //if night
+      lockedMarker = svgMarker.lockedNight;
+    }
+
     // Add a new marker to the map for this bridge
     bridge.marker = map.addMarker(
       bridge.lat,
       bridge.lng,
       bridge.title,
-      svgMarker.locked,
+      //need to change this
+      lockedMarker,
       onClick
     );
   });
@@ -65,7 +89,29 @@ geo.once('position', (lat, lng) => {
       // to have some kind of animation or other UI indication.
       if (bridge.marker) {
         log.info('Unlocking bridge', bridge);
-        bridge.marker.setIcon(svgMarker.unlocked);
+        //getting the sunCalc object
+        var times = SunCalc.getTimes(new Date(), lat, lng);
+        var date = new Date();
+
+        var sunriseTime = (times.sunrise.getHours() * 10) + times.sunrise.getMinutes();
+        var sunsetTime = (times.sunset.getHours() * 10) + times.sunset.getMinutes();
+        var currentTime = (date.getHours() * 10) + date.getHours();
+        //var currentTime = 225;
+
+        log.info(`SunRise Time=${sunriseTime}`);
+        log.info(`SunSet Time=${sunsetTime}`);
+        log.info(`Current Time=${currentTime}`);
+
+        var unlockedMarker;
+        if ((currentTime - sunsetTime) < 0 && (currentTime - sunriseTime) > 0) {
+          //if day
+          unlockedMarker = svgMarker.unlockedDay;
+        } else {
+          //if night
+          unlockedMarker = svgMarker.unlockedNight;
+        }
+        //need to change this to reflect
+        bridge.marker.setIcon(unlockedMarker);
       }
     });
   });
@@ -80,7 +126,7 @@ const onReady = () => {
     if (!(bridge.id && bridge.lat && bridge.lng)) {
       log.warn(
         `Bridge missing data, skipping: id=${bridge.id}, lat=${
-          bridge.lat
+        bridge.lat
         }, lng=${bridge.lng}`
       );
       return;
