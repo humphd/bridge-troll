@@ -1,6 +1,7 @@
 'use strict';
 
 const log = require('./log');
+const debug = require('./debug');
 
 // Expose `position` events when we move locations
 const EventEmitter = require('events');
@@ -11,7 +12,7 @@ const GeoTree = require('geo-tree');
 const set = new GeoTree();
 
 // Allow manual override of the geolocation API.  Use FAKE_GEO=1
-if (process.env.FAKE_GEO == 1) {
+if (debug.enabled) {
   require('./fake-geolocation');
 }
 
