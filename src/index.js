@@ -45,7 +45,9 @@ map.on('update', bounds => {
 });
 
 // Wait until we know where we are, then show the map centred on that point
-geo.once('ready', (lat, lng) => {
+geo.once('update', (lat, lng) => {
+  log.info('Got initial geolocation info, starting map UI');
+
   // Load a map, centered on our current position
   map.init(lat, lng);
 
@@ -73,19 +75,22 @@ geo.once('ready', (lat, lng) => {
   });
 });
 
+// Deal with any errors that might happen from geolocation update requests
 geo.once('error', err => {
   let msg;
-  if (err.code === 1 /* permission denied */) {
+
+  /* permission denied */
+  if (err.code === 1) {
     msg = 'Permission denied getting your location.';
-  } else if (
-    err.code ===
-    2 /* position unavailable (error response from location provider) */
-  ) {
+  } else if (err.code === 2) {
+    /* position unavailable (error response from location provider) */
     msg = 'Location information unavailable at this time.';
-  } else if (err.code === 3 /* timed out */) {
+  } else if (err.code === 3) {
+    /* timed out */
     msg = 'Timeout error getting your location.';
   } else {
-    /* unknown error */ msg = 'Unable to get your location.';
+    /* unknown error */
+    msg = 'Unable to get your location.';
   }
 
   msg = msg + '<br>Refresh your browser to try again.';

@@ -56,25 +56,11 @@ const geoErrorHandler = err => {
   module.exports.emit('error', err);
 };
 
-/**
- * Browser Geolocation API - watch for live updates to position.
- * https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation
- */
-module.exports.watchPosition = () => {
-  if (!('geolocation' in navigator)) {
-    geoErrorHandler(new Error('Unable to access geolocation information'));
-    return;
-  }
-
-  let success = position => {
-    let lat = position.coords.latitude;
-    let lng = position.coords.longitude;
-    log.info(`Geolocation position update: lat=${lat}, lng=${lng}`);
-    module.exports.emit('update', lat, lng);
-  };
-
-  navigator.geolocation.watchPosition(success, geoErrorHandler);
-  log.info('Starting to watch for geolocation position updates');
+const geoSuccessHandler = position => {
+  let lat = position.coords.latitude;
+  let lng = position.coords.longitude;
+  log.debug(`Geolocation position update: lat=${lat}, lng=${lng}`);
+  module.exports.emit('update', lat, lng);
 };
 
 /**
@@ -87,25 +73,6 @@ module.exports.init = () => {
     return;
   }
 
-  let success = position => {
-    let lat = position.coords.latitude;
-    let lng = position.coords.longitude;
-    let duration = Date.now() - start;
-    log.info(
-      `Initial Geolocation position acquired: lat=${lat}, lng=${lng} took ${duration}ms`
-    );
-    module.exports.emit('ready', lat, lng);
-  };
-
-  let start = Date.now();
-  let geoOptions = {
-    timeout: 15 * 1000, // timeout after 15s of waiting
-    maximumAge: 60 * 1000 // use any cached value from the past hour
-  };
-  navigator.geolocation.getCurrentPosition(
-    success,
-    geoErrorHandler,
-    geoOptions
-  );
-  log.info('Requesting initial position from browser...');
+  navigator.geolocation.watchPosition(geoSuccessHandler, geoErrorHandler);
+  log.info('Starting to watch for geolocation position updates');
 };
