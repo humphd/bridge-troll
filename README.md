@@ -20,14 +20,30 @@ $ npm install
 
 ## Development
 
-To run the web site in dev mode, use:
+To run the web site in dev mode, use one of:
 
 ```
 npm start
 ```
 
-This will build the site's resources, start a development web server
-at `http://localhost:8080`, and also watch for changes that need to be rebuilt.
+or
+
+```
+npm run debug
+```
+
+Both will build the site's resources, start a development web server
+at `http://localhost:8080/`, and also watch for changes that need to be rebuilt.
+
+The `npm run debug` option further enables enhanced debugging in the map and with
+geolocation.  For example, you can double-click on the map to move your
+position, zoom or move the map, and also use `window.fakeGeo` methods from the
+console.  See `src/fake-geolocation.js` for info.
+
+A number of other overrides are also possible when running in debug mode via the query string:
+
+* `?collision=250` - specify the radius from the current position to collide with a bridge (default 50m)
+* `?lat=...&lng=...` - specify the startup `lat` and `lng`.  If none is given Seneca@York is used.
 
 ### Logging
 
@@ -40,20 +56,25 @@ http://localhost:8080/?loglevel=info
 http://localhost:8080/?loglevel=warn
 http://localhost:8080/?loglevel=error
 ```
-### Override Geolocation Data for testing
 
-You can configure geolocation to work manually vs. automatically in the browser:
+### Tests
+
+You can run the test suite using:
 
 ```
-npm run debug
+npm run test
 ```
 
-You can now double-click on the map to move your position, and also use
-`window.fakeGeo` methods from the console.  A number of other overrides
-are also possible when running in debug mode via the query string:
+This will run a few things:
 
-* `?collision=250` - specify the radius from the current position to collide with a bridge (default 50m)
-* `?lat=...&lng=...` - specify the startup `lat` and `lng`.  If none is given Seneca@York is used.
+1. `eslint` to check for any lint issues
+2. `prettier` to see if files need to be formatted (i.e., run `npm run prettier`) if it fails
+3. `karma-headless` to run the unit tests in a headless version of Chrome
+
+After the tests have finished, a test code coverage report will be generated in `coverage/index.html`
+and will show you which parts of the code are being run during testing, and which are not.
+
+See below for other ways to run these. 
 
 ### Scripts
 
@@ -67,11 +88,26 @@ npm run build
     bundle index.html into dist/ (suitable for production)
 
 npm run eslint
-    run eslint and report any errors
+    run eslint and report any errors that can't be automatically fixed
 
 npm run prettier
     run prettier on all source files, fixing any formatting issues
 
 npm run lint
     check that all flies pass eslint and prettier
+
+npm run debug
+    build index.html and start a dev web server, enabling enhanced debugging
+
+npm run karma-headless
+    run unit tests with ChromeHeadless (default)
+
+npm karma-firefox
+    run unit tests with Firefox (must be installed locally)
+
+npm run karma-chrome
+    run unit tests with Chrome (must be installed locally)
+
+npm run karma-edge
+    run unit tests with Edge (must be installed locally)
 ```
