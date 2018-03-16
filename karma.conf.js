@@ -14,7 +14,7 @@ module.exports = function(config) {
 
 
     // list of files / patterns to load in the browser
-    files: ['test/**/*.js'],
+    files: ['src/**/*.js', 'test/**/*.js'],
 
 
     // list of files / patterns to exclude
@@ -25,18 +25,31 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/**/*.js': ['browserify']
+      'test/**/*.js': ['browserify'],
+      'src/**/*.js': ['coverage']
     },
 
     browserify: {
       debug: true,
-      transform: [ 'brfs' ]
+      transform: ["brfs", "browserify-istanbul" ]
+    },
+
+    // Code coverage reporting to test/coverage
+    coverageReporter: {
+      includeAllSources: true,
+      reporters:[
+        {type: 'html', dir:'coverage/'},
+        {type: 'text-summary'}
+      ],
+      instrumenterOptions: {
+        istanbul: { noCompact: true }
+      }
     },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
 
 
     // web server port
