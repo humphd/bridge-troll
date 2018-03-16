@@ -36,11 +36,6 @@ window.fakeGeo = {
   simulateError: err => updateCallers('error', err)
 };
 
-// Get the current position so we can report it on startup
-navigator.geolocation.getCurrentPosition(pos => {
-  updateCallers('success', pos);
-});
-
 // If the user double-clicks on the map, jump to that position
 map.on('dblclick', e => {
   let lat = e.latlng.lat;

@@ -43,13 +43,26 @@ module.exports.findNearby = (lat, lng, radius) => {
 };
 
 /**
+ * Add a record to our quadtree set for this item.
+ */
+module.exports.insert = (lat, lng, data) => set.insert(lat, lng, data);
+
+/**
+ * Catch-all for geolocation errors.
+ */
+const geoErrorHandler = err => {
+  err = err || new Error('Error obtaining location data');
+  log.error('Position Error', err);
+  module.exports.emit('error', err);
+};
+
+/**
  * Browser Geolocation API - watch for live updates to position.
  * https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation
  */
 module.exports.watchPosition = () => {
   if (!('geolocation' in navigator)) {
-    log.error('Unable to access geolocation information');
-    // TODO: should probably emit an `error` event or something
+    geoErrorHandler(new Error('Unable to access geolocation information'));
     return;
   }
 
@@ -57,18 +70,42 @@ module.exports.watchPosition = () => {
     let lat = position.coords.latitude;
     let lng = position.coords.longitude;
     log.info(`Geolocation position update: lat=${lat}, lng=${lng}`);
-    module.exports.emit('position', lat, lng);
+    module.exports.emit('update', lat, lng);
   };
 
-  let error = err => {
-    log.error('Error obtaining geolocation position info', err);
-  };
-
-  navigator.geolocation.watchPosition(success, error);
+  navigator.geolocation.watchPosition(success, geoErrorHandler);
   log.info('Starting to watch for geolocation position updates');
 };
 
 /**
- * Add a record to our quadtree set for this item.
+ * Browser Geolocation API - get initial position.
+ * https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation
  */
-module.exports.insert = (lat, lng, data) => set.insert(lat, lng, data);
+module.exports.init = () => {
+  if (!('geolocation' in navigator)) {
+    geoErrorHandler(new Error('Unable to access geolocation information'));
+    return;
+  }
+
+  let success = position => {
+    let lat = position.coords.latitude;
+    let lng = position.coords.longitude;
+    let duration = Date.now() - start;
+    log.info(
+      `Initial Geolocation position acquired: lat=${lat}, lng=${lng} took ${duration}ms`
+    );
+    module.exports.emit('ready', lat, lng);
+  };
+
+  let start = Date.now();
+  let geoOptions = {
+    timeout: 15 * 1000, // timeout after 15s of waiting
+    maximumAge: 60 * 1000 // use any cached value from the past hour
+  };
+  navigator.geolocation.getCurrentPosition(
+    success,
+    geoErrorHandler,
+    geoOptions
+  );
+  log.info('Requesting initial position from browser...');
+};
