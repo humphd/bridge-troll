@@ -5,7 +5,7 @@
   "scripts": {
     "generate-bridge-json": "node tools/csv2json.js",
     "build": "parcel build src/index.html",
-    "eslint": "eslint tools src test",
+    "eslint": "eslint --fix tools src test",
     "prettier": "prettier --single-quote --write \"{tools,src,test}/**/*.{js,css}\"",
     "check-prettier": "prettier --single-quote --list-different \"{tools,src,test}/**/*.{js,css}\"",
     "lint": "npm run eslint && npm run check-prettier",
