@@ -1,5 +1,6 @@
 'use strict';
 
+require('../node_modules/leaflet/dist/leaflet.css');
 const log = require('./log');
 
 const EventEmitter = require('events');

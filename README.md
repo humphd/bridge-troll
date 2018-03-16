@@ -27,7 +27,7 @@ npm start
 ```
 
 This will build the site's resources, start a development web server
-at `http://localhost:1234`, and also watch for changes that need to be rebuilt.
+at `http://localhost:8080`, and also watch for changes that need to be rebuilt.
 
 ### Logging
 
@@ -35,10 +35,10 @@ You can enable different log levels, and see more info in the browser `console`.
 Via the query string, set your desired log level:
 
 ```
-http://localhost:1234?loglevel=debug
-http://localhost:1234?loglevel=warn
-http://localhost:1234?loglevel=info
-http://localhost:1234?loglevel=error
+http://localhost:8080/?loglevel=debug
+http://localhost:8080/loglevel=info
+http://localhost:8080/loglevel=warn
+http://localhost:8080/loglevel=error
 ```
 ### Override Geolocation Data for testing
 
@@ -71,4 +71,3 @@ npm run prettier
 npm run lint
     check that all flies pass eslint and prettier
 ```
-

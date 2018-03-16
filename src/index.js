@@ -1,5 +1,7 @@
 'use strict';
 
+require('../styles/styles.css');
+
 const geo = require('./geo');
 const map = require('./map');
 const log = require('./log');
