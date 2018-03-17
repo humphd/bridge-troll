@@ -19,6 +19,40 @@ exports.getLocation = function (lat, lng) {
     }
 };
 
+exports.getUnlocked = function (lat, lng) {
+    let times = SunCalc.getTimes(new Date(), lat, lng);
+    let currentTime = new Date();
+
+    let sunset = calculateTime(times.sunset.getHours(), times.sunset.getMinutes());
+    let sunrise = calculateTime(times.sunrise.getHours(), times.sunrise.getMinutes());
+    let current = calculateTime(currentTime.getHours(), currentTime.getMinutes());
+
+    if ((current - sunset) < 0 && (current - sunrise) > 0) {
+        //if day
+        return svgMarker.unlockedDay;
+    } else {
+        //if night
+        return svgMarker.unlockedNight;
+    }
+};
+
+exports.getLocked = function (lat, lng) {
+    let times = SunCalc.getTimes(new Date(), lat, lng);
+    let currentTime = new Date();
+
+    let sunset = calculateTime(times.sunset.getHours(), times.sunset.getMinutes());
+    let sunrise = calculateTime(times.sunrise.getHours(), times.sunrise.getMinutes());
+    let current = calculateTime(currentTime.getHours(), currentTime.getMinutes());
+
+    if ((current - sunset) < 0 && (current - sunrise) > 0) {
+        //if day
+        return svgMarker.lockedDay;
+    } else {
+        //if night
+        return svgMarker.lockedNight;
+    }
+};
+
 exports.getMap = function (lat, lng) {
     let times = SunCalc.getTimes(new Date(), lat, lng);
     let currentTime = new Date();
