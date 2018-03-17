@@ -16,6 +16,7 @@ const svgMarker = require('./svg-marker');
 
 let map;
 let currentLocationMarker;
+let currentState;
 
 // TODO: I'm not sure what the ideal zoom level is.  Leaflet often uses 13
 // in docs and tutorials.  14 seems to provide a bit more context
@@ -53,11 +54,19 @@ module.exports.init = (lat, lng) => {
   map.on('click', e => module.exports.emit('click', e));
   map.on('dblclick', e => module.exports.emit('dblclick', e));
 
+  if(!currentState){
+    var locationMarker = dayNight.getLocation(lat, lng);
 
-  var locationMarker = dayNight.getLocation(lat,lng);
+    dayNight.getMap(lat, lng).addTo(map);
 
-  dayNight.getMap(lat,lng).addTo(map);
+    currentState = dayNight.isDay(lat, lng);
+  }else if (currentState === dayNight.isDay(lat, lng)) {
+    var locationMarker = dayNight.getLocation(lat, lng);
 
+    dayNight.getMap(lat, lng).addTo(map);
+
+    currentState = dayNight.isDay(lat, lng);
+  }
   map.setView([lat, lng], zoomLevel);
 
   // Show a marker at our current location
@@ -75,8 +84,17 @@ module.exports.init = (lat, lng) => {
  * Adds and returns a marker to the map.
  */
 module.exports.addMarker = (lat, lng, title, icon, onClick) => {
-  //move code down here
-  //var locationMarker = dayNight.getLocation(lat,lng);
+  //might just need to do currently location
+  if (title === 'Current Location') {
+    //need to see if day change happened
+    if (currentState !== dayNight.isDay(lat, lng)) {
+      icon = dayNight.getLocation(lat, lng);
+
+      dayNight.getMap(lat, lng).addTo(map);
+
+      currentState = dayNight.isDay(lat, lng);
+    }
+  }
 
   let marker = leaflet
     .marker([lat, lng], {
@@ -101,6 +119,7 @@ module.exports.addMarker = (lat, lng, title, icon, onClick) => {
  * Re-centre the map and update location marker
  */
 module.exports.setCurrentLocation = (lat, lng) => {
+  //can do the updates here
   currentLocationMarker.setLatLng({ lat, lng });
   map.setView([lat, lng], zoomLevel);
   log.debug(`Moved current location marker to lat=${lat}, lng=${lng}`);
