@@ -54,19 +54,12 @@ module.exports.init = (lat, lng) => {
   map.on('click', e => module.exports.emit('click', e));
   map.on('dblclick', e => module.exports.emit('dblclick', e));
 
-  if(!currentState){
-    var locationMarker = dayNight.getLocation(lat, lng);
+  var locationMarker = dayNight.getLocation(lat, lng);
 
-    dayNight.getMap(lat, lng).addTo(map);
+  dayNight.getMap(lat, lng).addTo(map);
 
-    currentState = dayNight.isDay(lat, lng);
-  }else if (currentState === dayNight.isDay(lat, lng)) {
-    var locationMarker = dayNight.getLocation(lat, lng);
+  currentState = dayNight.isDay(lat, lng);
 
-    dayNight.getMap(lat, lng).addTo(map);
-
-    currentState = dayNight.isDay(lat, lng);
-  }
   map.setView([lat, lng], zoomLevel);
 
   // Show a marker at our current location
@@ -85,23 +78,10 @@ module.exports.init = (lat, lng) => {
  */
 module.exports.addMarker = (lat, lng, title, icon, onClick) => {
   //might just need to do currently location
-  if (title === 'Current Location') {
-    //need to see if day change happened
-    if (currentState !== dayNight.isDay(lat, lng)) {
-      icon = dayNight.getLocation(lat, lng);
-
-      dayNight.getMap(lat, lng).addTo(map);
-
-      currentState = dayNight.isDay(lat, lng);
-    }
-  }
-
   let marker = leaflet
     .marker([lat, lng], {
       title,
       icon
-      //need to try again
-      //icon:locationMarker
     })
     .addTo(map);
 
@@ -119,7 +99,10 @@ module.exports.addMarker = (lat, lng, title, icon, onClick) => {
  * Re-centre the map and update location marker
  */
 module.exports.setCurrentLocation = (lat, lng) => {
-  //can do the updates here
+
+  currentLocationMarker.setIcon(dayNight.getLocation(lat, lng));
+  dayNight.getMap(lat, lng).addTo(map);
+
   currentLocationMarker.setLatLng({ lat, lng });
   map.setView([lat, lng], zoomLevel);
   log.debug(`Moved current location marker to lat=${lat}, lng=${lng}`);

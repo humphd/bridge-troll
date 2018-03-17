@@ -78,6 +78,7 @@ geo.once('update', (lat, lng) => {
 
         //need to change this to reflect
         bridge.marker.setIcon(unlockedMarker);
+        
       }
     });
   });
