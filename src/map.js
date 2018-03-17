@@ -58,7 +58,6 @@ module.exports.init = (lat, lng) => {
   var times = SunCalc.getTimes(new Date(), lat, lng);
   var date = new Date();
 
-
   var sunriseTime = (times.sunrise.getHours() * 10 ) + times.sunrise.getMinutes();
   var sunsetTime = (times.sunset.getHours() * 10 ) + times.sunset.getMinutes();
   var currentTime = (date.getHours() * 10) + date.getHours();
