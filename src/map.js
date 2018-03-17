@@ -58,41 +58,6 @@ module.exports.init = (lat, lng) => {
 
   dayNight.getMap(lat,lng).addTo(map);
 
-
-  //getting the sunCalc object
-  /*
-  var times = SunCalc.getTimes(new Date(), lat, lng);
-  var date = new Date();
-
-  var sunriseTime = (times.sunrise.getHours() * 10) + times.sunrise.getMinutes();
-  var sunsetTime = (times.sunset.getHours() * 10) + times.sunset.getMinutes();
-  var currentTime = (date.getHours() * 10) + date.getHours();
-  //var currentTime = 225;
-
-  log.info(`SunRise Time=${sunriseTime}`);
-  log.info(`SunSet Time=${sunsetTime}`);
-  log.info(`Current Time=${currentTime}`);
-
-  var locationMarker;
-  if ((currentTime - sunsetTime) < 0 && (currentTime - sunriseTime) > 0) {
-    //if day
-    locationMarker = svgMarker.locationDay;
-    var OpenStreetMap_BlackAndWhite = L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
-  } else {
-    //if night
-    //takes longer with the white version of it
-    locationMarker = svgMarker.locationNight;
-    var CartoDB_DarkMatter = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-      subdomains: 'abcd',
-      maxZoom: 19
-    }).addTo(map);
-  }
-  */
-
   map.setView([lat, lng], zoomLevel);
 
   // Show a marker at our current location
@@ -111,13 +76,14 @@ module.exports.init = (lat, lng) => {
  */
 module.exports.addMarker = (lat, lng, title, icon, onClick) => {
   //move code down here
-  
+  //var locationMarker = dayNight.getLocation(lat,lng);
+
   let marker = leaflet
     .marker([lat, lng], {
       title,
       icon
       //need to try again
-      //icon:svgMarker.locationDay
+      //icon:locationMarker
     })
     .addTo(map);
 
