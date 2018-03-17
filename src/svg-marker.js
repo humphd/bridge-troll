@@ -44,3 +44,8 @@ module.exports.unlockedNight = leaflet.icon({
   iconUrl: unlockedNightSvgUrl,
   iconSize
 });
+
+module.exports.unlockedNight = leaflet.icon({
+  iconUrl: unlockedNightUrl,
+  iconSize
+});

@@ -15,6 +15,7 @@ const svgMarker = require('./svg-marker');
 
 let map;
 let currentLocationMarker;
+let currentState;
 
 // TODO: I'm not sure what the ideal zoom level is.  Leaflet often uses 13
 // in docs and tutorials.  14 seems to provide a bit more context
@@ -55,8 +56,6 @@ module.exports.init = (lat, lng) => {
   var locationMarker = dayNight.getLocation(lat, lng);
 
   dayNight.getMap(lat, lng).addTo(map);
-
-  map.setView([lat, lng], zoomLevel);
 
   // Show a marker at our current location
   currentLocationMarker = leaflet
