@@ -57,6 +57,8 @@ module.exports.init = (lat, lng) => {
 
   dayNight.getMap(lat, lng).addTo(map);
 
+  map.setView([lat, lng], zoomLevel);
+
   // Show a marker at our current location
   currentLocationMarker = leaflet
     .marker([lat, lng], {
