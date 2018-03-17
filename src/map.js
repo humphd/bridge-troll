@@ -4,6 +4,8 @@ require('../node_modules/leaflet/dist/leaflet.css');
 const log = require('./log');
 
 const EventEmitter = require('events');
+const SunCalc = require('suncalc');
+var moment = require('moment');
 module.exports = new EventEmitter();
 
 const leaflet = require('leaflet');
@@ -51,8 +53,39 @@ module.exports.init = (lat, lng) => {
   map.on('click', e => module.exports.emit('click', e));
   map.on('dblclick', e => module.exports.emit('dblclick', e));
 
-  let tileUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
-  leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
+
+  //getting the sunCalc object
+  var times = SunCalc.getTimes(new Date(), lat, lng);
+  var date = new Date();
+
+
+  var sunriseTime = (times.sunrise.getHours() * 10 ) + times.sunrise.getMinutes();
+  var sunsetTime = (times.sunset.getHours() * 10 ) + times.sunset.getMinutes();
+  var currentTime = (date.getHours() * 10) + date.getHours();
+  //var currentTime = 225;
+
+  log.info(`SunRise Time=${sunriseTime}`);
+  log.info(`SunSet Time=${sunsetTime}`);
+  log.info(`Current Time=${currentTime}`);
+
+  var locationMarker;
+  if((currentTime - sunsetTime) <  0 && (currentTime - sunriseTime)  > 0 ){
+    //if day
+    locationMarker = svgMarker.locationDay;
+    var OpenStreetMap_BlackAndWhite = L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
+	    maxZoom: 18,
+	    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+  }else{
+    //if night
+    //takes longer with the white version of it
+    locationMarker = svgMarker.locationNight;
+    var CartoDB_DarkMatter = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+  }
 
   map.setView([lat, lng], zoomLevel);
 
@@ -60,7 +93,8 @@ module.exports.init = (lat, lng) => {
   currentLocationMarker = leaflet
     .marker([lat, lng], {
       title: 'Current Location',
-      icon: svgMarker.location
+      //need to change it so that it switches collour
+      icon: locationMarker
     })
     .addTo(map);
 
