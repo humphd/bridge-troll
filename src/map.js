@@ -5,7 +5,7 @@ const log = require('./log');
 
 const EventEmitter = require('events');
 const SunCalc = require('suncalc');
-var moment = require('moment');
+const dayNight = require('./dayNight');
 module.exports = new EventEmitter();
 
 const leaflet = require('leaflet');
@@ -54,12 +54,18 @@ module.exports.init = (lat, lng) => {
   map.on('dblclick', e => module.exports.emit('dblclick', e));
 
 
+  var locationMarker = dayNight.getLocation(lat,lng);
+
+  dayNight.getMap(lat,lng).addTo(map);
+
+
   //getting the sunCalc object
+  /*
   var times = SunCalc.getTimes(new Date(), lat, lng);
   var date = new Date();
 
-  var sunriseTime = (times.sunrise.getHours() * 10 ) + times.sunrise.getMinutes();
-  var sunsetTime = (times.sunset.getHours() * 10 ) + times.sunset.getMinutes();
+  var sunriseTime = (times.sunrise.getHours() * 10) + times.sunrise.getMinutes();
+  var sunsetTime = (times.sunset.getHours() * 10) + times.sunset.getMinutes();
   var currentTime = (date.getHours() * 10) + date.getHours();
   //var currentTime = 225;
 
@@ -68,14 +74,14 @@ module.exports.init = (lat, lng) => {
   log.info(`Current Time=${currentTime}`);
 
   var locationMarker;
-  if((currentTime - sunsetTime) <  0 && (currentTime - sunriseTime)  > 0 ){
+  if ((currentTime - sunsetTime) < 0 && (currentTime - sunriseTime) > 0) {
     //if day
     locationMarker = svgMarker.locationDay;
     var OpenStreetMap_BlackAndWhite = L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
-	    maxZoom: 18,
-	    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      maxZoom: 18,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
-  }else{
+  } else {
     //if night
     //takes longer with the white version of it
     locationMarker = svgMarker.locationNight;
@@ -85,6 +91,7 @@ module.exports.init = (lat, lng) => {
       maxZoom: 19
     }).addTo(map);
   }
+  */
 
   map.setView([lat, lng], zoomLevel);
 
@@ -92,7 +99,6 @@ module.exports.init = (lat, lng) => {
   currentLocationMarker = leaflet
     .marker([lat, lng], {
       title: 'Current Location',
-      //need to change it so that it switches collour
       icon: locationMarker
     })
     .addTo(map);
@@ -104,10 +110,14 @@ module.exports.init = (lat, lng) => {
  * Adds and returns a marker to the map.
  */
 module.exports.addMarker = (lat, lng, title, icon, onClick) => {
+  //move code down here
+  
   let marker = leaflet
     .marker([lat, lng], {
       title,
       icon
+      //need to try again
+      //icon:svgMarker.locationDay
     })
     .addTo(map);
 
