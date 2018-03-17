@@ -7,7 +7,6 @@ const map = require('./map');
 const log = require('./log');
 const svgMarker = require('./svg-marker');
 const dayNight = require('./dayNight');
-const SunCalc = require('suncalc');
 
 const Bridge = require('./bridge');
 const bridges = {};

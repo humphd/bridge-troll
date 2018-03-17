@@ -3,7 +3,7 @@ const svgMarker = require('./svg-marker');
 const log = require('./log');
 
 /**
- * This returns a leaflet.icon depending on the time of day
+ * This returns a location icon depending on the time of day
  * @param {*} lat The Latitude
  * @param {*} lng The Longitude
  */
@@ -29,9 +29,9 @@ exports.getLocation = function (lat, lng) {
 };
 
 /**
- * 
- * @param {*} lat 
- * @param {*} lng 
+ * This returns a unlocked icon depending on the time of day
+ * @param {*} lat The Latitude
+ * @param {*} lng The Longitude
  */
 exports.getUnlocked = function (lat, lng) {
     let times = SunCalc.getTimes(new Date(), lat, lng);
@@ -55,9 +55,9 @@ exports.getUnlocked = function (lat, lng) {
 };
 
 /**
- * 
- * @param {*} lat 
- * @param {*} lng 
+ * This returns a locked icon depending on the time of day
+ * @param {*} lat The Latitude
+ * @param {*} lng The Longitude
  */
 exports.getLocked = function (lat, lng) {
     let times = SunCalc.getTimes(new Date(), lat, lng);
@@ -81,9 +81,9 @@ exports.getLocked = function (lat, lng) {
 };
 
 /**
- * 
- * @param {*} lat 
- * @param {*} lng 
+ * This returns a map based on the time of day
+ * @param {*} lat The Latitude
+ * @param {*} lng The Longitude
  */
 exports.getMap = function (lat, lng) {
     let times = SunCalc.getTimes(new Date(), lat, lng);
@@ -111,9 +111,9 @@ exports.getMap = function (lat, lng) {
 };
 
 /**
- * 
- * @param {*} lat 
- * @param {*} lng 
+ * This function tells if it's day or night
+ * @param {*} lat The Latitude
+ * @param {*} lng The Longitude
  */
 exports.isDay = function (lat, lng) {
     let times = SunCalc.getTimes(new Date(), lat, lng);
@@ -133,7 +133,7 @@ exports.isDay = function (lat, lng) {
 };
 
 /**
- * This function returns 
+ * This function returns the time in a number format
  * @param {*} hour The hour has to be in 24 hour time
  * @param {*} min A minute ex. 0 to 59
  */
