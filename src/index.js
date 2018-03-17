@@ -6,6 +6,7 @@ const log = require('./log');
 const geo = require('./geo');
 const map = require('./map');
 const svgMarker = require('./svg-marker');
+const distance = require('./distance');
 
 const Bridge = require('./bridge');
 const bridges = {};
@@ -60,7 +61,7 @@ geo.once('update', (lat, lng) => {
     map.setCurrentLocation(lat, lng);
 
     // Look 50m nearby for any bridges to collect
-    geo.findNearby(lat, lng, 50).forEach(id => {
+    geo.findNearby(lat, lng, distance.COLLISION_M).forEach(id => {
       let bridge = bridges[id];
       log.debug('Found nearby bridge', bridge);
 

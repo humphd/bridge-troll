@@ -2,6 +2,7 @@
 
 const log = require('./log');
 const debug = require('./debug');
+const distance = require('./distance');
 
 // Expose `position` events when we move locations
 const EventEmitter = require('events');
@@ -36,9 +37,8 @@ module.exports.findWithin = (p1, p2) => {
  * Given a position (`lat`, `lng`), find all nearby points within a radius
  * of `radius` metres, or 1 KM if not specified.
  */
-const ONE_KM = 1000;
 module.exports.findNearby = (lat, lng, radius) => {
-  radius = isFinite(radius) ? radius : ONE_KM;
+  radius = isFinite(radius) ? radius : distance.ONE_KM;
   log.debug(`geo.findNearby lat=${lat}, lng=${lng}, radius=${radius}m`);
   return set.find({ lat, lng }, radius, 'm');
 };
