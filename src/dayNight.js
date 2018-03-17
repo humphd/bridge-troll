@@ -77,6 +77,23 @@ exports.getMap = function (lat, lng) {
     }
 };
 
+exports.isDay = function (lat, lng) {
+    let times = SunCalc.getTimes(new Date(), lat, lng);
+    let currentTime = new Date();
+
+    let sunset = calculateTime(times.sunset.getHours(), times.sunset.getMinutes());
+    let sunrise = calculateTime(times.sunrise.getHours(), times.sunrise.getMinutes());
+    let current = calculateTime(currentTime.getHours(), currentTime.getMinutes());
+
+    if ((current - sunset) < 0 && (current - sunrise) > 0) {
+        //if day
+        return true;
+    } else {
+        //if night
+        return false;
+    }
+};
+
 function getSunTime(lat, lng) {
     return SunCalc.getTimes(new Date(), lat, lng);
 }
