@@ -12,7 +12,6 @@ const attribution =
   '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
 const svgMarker = require('./svg-marker');
-const SunCalc = require('suncalc');
 
 let map;
 let currentLocationMarker;
@@ -52,8 +51,8 @@ module.exports.init = (lat, lng) => {
   map.on('moveend', onMapUpdated);
   map.on('click', e => module.exports.emit('click', e));
   map.on('dblclick', e => module.exports.emit('dblclick', e));
-  
-  DisplayMode.init(lat,lng);
+
+  DisplayMode.init(lat, lng);
   let tileUrl = DisplayMode.getMode();
 
   leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
@@ -69,7 +68,6 @@ module.exports.init = (lat, lng) => {
     .addTo(map);
 
   log.info(`Map initialized with centre lat=${lat}, lng=${lng}`);
-
 };
 
 /**
