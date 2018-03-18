@@ -53,7 +53,7 @@ module.exports = {
     new HtmlWebPackPlugin({template: './src/index.html'}),
     new webpack.DefinePlugin({
       'process.env': {
-        'FAKE_GEO': JSON.stringify(process.env.FAKE_GEO)
+        'DEBUG': JSON.stringify(process.env.DEBUG)
       }
     })
   ],

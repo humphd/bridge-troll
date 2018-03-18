@@ -1,8 +1,8 @@
 'use strict';
 
 const log = require('./log');
-const debug = require('./debug');
 const distance = require('./distance');
+const debug = require('./debug');
 
 // Expose `position` events when we move locations
 const EventEmitter = require('events');
@@ -12,10 +12,11 @@ module.exports = new EventEmitter();
 const GeoTree = require('geo-tree');
 const set = new GeoTree();
 
-// Allow manual override of the geolocation API.  Use FAKE_GEO=1
+// Override of the geolocation API.
 if (debug.enabled) {
   require('./fake-geolocation');
 }
+
 
 /**
  * Find all nearby points within a bounding box.  p1 and p2 should be diagonal

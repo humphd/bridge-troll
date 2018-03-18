@@ -11,7 +11,7 @@
     "lint": "npm run eslint && npm run check-prettier",
     "test": "npm run lint",
     "start": "webpack-dev-server --mode development --open",
-    "debug": "webpack-dev-server --mode development --define process.env.FAKE_GEO=1 --open"
+    "debug": "webpack-dev-server --mode development --define process.env.DEBUG=1 --open"
   },
   "author": "humphd",
   "license": "MIT",

@@ -1,5 +1,5 @@
 'use strict';
 
-// If the app is started with the FAKE_GEO environment variable set to 1
+// If the app is started with the DEBUG environment variable set to 1
 // we enable debug mode.
-module.exports.enabled = process.env.FAKE_GEO == 1;
+module.exports.enabled = process.env.DEBUG == 1;
