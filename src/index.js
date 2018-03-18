@@ -54,7 +54,10 @@ geo.once('update', (lat, lng) => {
 
   // Stop showing the startup spinner now that map is drawn
   log.info('Removing loading spinner');
-  document.querySelector('.loading-spinner').style.display = 'none';
+  let loadingSpinner = document.querySelector('.loading-spinner');
+  if (loadingSpinner) {
+    loadingSpinner.style.display = 'none';
+  }
 
   // Start listening for regular updates to geo position data
   geo.on('update', (lat, lng) => {
@@ -97,8 +100,14 @@ geo.once('error', err => {
 
   msg = msg + '<br>Refresh your browser to try again.';
 
-  document.querySelector('.sk-folding-cube').style.display = 'none';
-  document.querySelector('.loading-info').innerHTML = msg;
+  let foldingCube = document.querySelector('.sk-folding-cube');
+  if (foldingCube) {
+    foldingCube.style.display = 'none';
+  }
+  let loadingInfo = document.querySelector('.loading-info');
+  if (loadingInfo) {
+    loadingInfo.innerHTML = msg;
+  }
 });
 
 // Request our current position right away

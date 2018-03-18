@@ -23,8 +23,12 @@ class BaseUI extends EventEmitter {
   }
 
   init(lat, lng) {
+    let mapEl = document.createElement('div');
+    mapEl.id = 'map';
+    document.body.appendChild(mapEl);
+
     // http://leafletjs.com/reference-1.3.0.html#map
-    let map = (this.map = leaflet.map('map', this.options));
+    let map = (this.map = leaflet.map(mapEl, this.options));
     leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
     map.setView([lat, lng], defaultZoomLevel);
 
