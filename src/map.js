@@ -1,6 +1,7 @@
 'use strict';
 
 const log = require('./log');
+const DisplayMode = require('./displaymode');
 
 const EventEmitter = require('events');
 module.exports = new EventEmitter();
@@ -10,6 +11,7 @@ const attribution =
   '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
 const svgMarker = require('./svg-marker');
+const SunCalc = require('suncalc');
 
 let map;
 let currentLocationMarker;
@@ -49,8 +51,18 @@ module.exports.init = (lat, lng) => {
   map.on('moveend', onMapUpdated);
   map.on('click', e => module.exports.emit('click', e));
   map.on('dblclick', e => module.exports.emit('dblclick', e));
+  
+  let sunTimes = SunCalc.getTimes(new Date(), lat, lng)
+  DisplayMode.setMode('light');
+  
+  let now = new Date();
 
-  let tileUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+  if (now <= sunTimes.sunriseEnd ||  now >= sunTimes.sunsetStart){
+    DisplayMode.setMode('dark');
+  }
+  
+  let tileUrl = DisplayMode.getMode();
+
   leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
 
   map.setView([lat, lng], zoomLevel);
@@ -64,6 +76,7 @@ module.exports.init = (lat, lng) => {
     .addTo(map);
 
   log.info(`Map initialized with centre lat=${lat}, lng=${lng}`);
+
 };
 
 /**
