@@ -2,16 +2,25 @@
 
 const log = require('./log');
 const map = require('./map');
-
-// For debugging, use Seneca@York
-const senecaAtYork = {
-  lat: 43.7713,
-  lng: -79.4989
-};
+const config = require('./config');
 
 log.info(
   'Override Geolocation. Use `window.fakeGeo` in console or double-click map to move'
 );
+
+const setStartupPosition = () => {
+  // If ?lat=...&lng=... is set on query string, use that
+  if (config.lat && config.lng) {
+    log.debug(`Using initial position lat=${config.lat}, lng=${config.lng}`);
+    window.fakeGeo.moveTo(config.lat, config.lng);
+  } else {
+    // Otherwise use Seneca@York as default
+    log.debug(
+      'Using Seneca@York for initial position. Use ?lat=...&lng=... to override'
+    );
+    window.fakeGeo.moveTo(43.7713, -79.4989);
+  }
+};
 
 const callbacks = [];
 
@@ -20,10 +29,9 @@ navigator.geolocation.watchPosition = (success, error) => {
   let watchId = callbacks.length;
   callbacks.push({ success, error });
 
+  // If this is the first callback added, fire an initial position update
   if (callbacks.length === 1) {
-    // Trigger an initial position update
-    log.info('Using Seneca@York as initial geographic position in debug mode');
-    window.fakeGeo.moveTo(senecaAtYork.lat, senecaAtYork.lng);
+    setStartupPosition();
   }
 
   return watchId;

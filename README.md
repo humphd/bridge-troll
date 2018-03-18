@@ -49,7 +49,11 @@ npm run debug
 ```
 
 You can now double-click on the map to move your position, and also use
-`window.fakeGeo` methods from the console.
+`window.fakeGeo` methods from the console.  A number of other overrides
+are also possible when running in debug mode via the query string:
+
+* `?collision=250` - specify the radius from the current position to collide with a bridge (default 50m)
+* `?lat=...&lng=...` - specify the startup `lat` and `lng`.  If none is given Seneca@York is used.
 
 ### Scripts
 

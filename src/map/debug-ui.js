@@ -10,9 +10,14 @@ const leaflet = require('leaflet');
  * For debugging, we show more info, and allow interactions
  */
 class DebugUI extends BaseUI {
-  constructor(lat, lng) {
+  constructor() {
     // use map defaults, but override double-click to zoom
-    super(lat, lng, { doubleClickZoom: false });
+    super({ doubleClickZoom: false });
+  }
+
+  // Override init() in order to add extra map debugging info
+  init(lat, lng) {
+    super.init(lat, lng);
 
     // Expose double-click for geolocation faking
     this.map.on('dblclick', e => this.emit('dblclick', e));
@@ -39,9 +44,7 @@ class DebugUI extends BaseUI {
     this.currentLocationDebugRadius.setLatLng({ lat, lng });
   }
 
-  /**
-   * Adds and returns a marker to the map.
-   */
+  // Adds and returns a marker to the map.
   addMarker(lat, lng, title, icon, onClick) {
     // Show lat/lng info in debug mode.
     title = title + ` (${lat}, ${lng})`;

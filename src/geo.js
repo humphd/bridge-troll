@@ -38,7 +38,7 @@ module.exports.findWithin = (p1, p2) => {
  * of `radius` metres, or 1 KM if not specified.
  */
 module.exports.findNearby = (lat, lng, radius) => {
-  radius = isFinite(radius) ? radius : distance.ONE_KM;
+  radius = isFinite(radius) ? parseFloat(radius) : distance.ONE_KM;
   log.debug(`geo.findNearby lat=${lat}, lng=${lng}, radius=${radius}m`);
   return set.find({ lat, lng }, radius, 'm');
 };

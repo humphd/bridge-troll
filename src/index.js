@@ -60,7 +60,7 @@ geo.once('update', (lat, lng) => {
   geo.on('update', (lat, lng) => {
     map.setCurrentLocation(lat, lng);
 
-    // Look 50m nearby for any bridges to collect
+    // Look nearby for any bridges to collect
     geo.findNearby(lat, lng, distance.COLLISION_M).forEach(id => {
       let bridge = bridges[id];
       log.debug('Found nearby bridge', bridge);
@@ -68,9 +68,10 @@ geo.once('update', (lat, lng) => {
       // TODO: need to persist this between sessions.
       // For now just unlock the icon.  Also would be nice
       // to have some kind of animation or other UI indication.
-      if (bridge.marker) {
+      if (!(bridge.marker && bridge.marker.isUnlocked)) {
         log.info('Unlocking bridge', bridge);
         bridge.marker.setIcon(svgMarker.unlocked);
+        bridge.marker.isUnlocked = true;
       }
     });
   });

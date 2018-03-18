@@ -49,6 +49,32 @@ class BaseUI extends EventEmitter {
   }
 
   /**
+   * Add a marker to the map
+   * @param {*} lat
+   * @param {*} lng
+   * @param {*} title tooltip to show
+   * @param {*} icon icon to use
+   * @param {*} onClick optional onClick handler
+   */
+  addMarker(lat, lng, title, icon, onClick) {
+    let marker = leaflet
+      .marker([lat, lng], {
+        title,
+        icon
+      })
+      .addTo(this.map);
+
+    // Wire-up a click handler for this marker
+    if (onClick) {
+      marker.on('click', onClick);
+    }
+
+    log.debug(`Added marker title=${title} at lat=${lat}, lng=${lng}`);
+
+    return marker;
+  }
+
+  /**
    * Centre of the map and update location marker
    */
   setCurrentLocation(lat, lng) {
