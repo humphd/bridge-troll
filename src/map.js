@@ -4,6 +4,7 @@ require('../node_modules/leaflet/dist/leaflet.css');
 const log = require('./log');
 
 const EventEmitter = require('events');
+const dayNight = require('./dayNight');
 module.exports = new EventEmitter();
 
 const leaflet = require('leaflet');
@@ -14,6 +15,7 @@ const svgMarker = require('./svg-marker');
 
 let map;
 let currentLocationMarker;
+let currentState;
 
 // TODO: I'm not sure what the ideal zoom level is.  Leaflet often uses 13
 // in docs and tutorials.  14 seems to provide a bit more context
@@ -51,8 +53,9 @@ module.exports.init = (lat, lng) => {
   map.on('click', e => module.exports.emit('click', e));
   map.on('dblclick', e => module.exports.emit('dblclick', e));
 
-  let tileUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
-  leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
+  var locationMarker = dayNight.getLocation(lat, lng);
+
+  dayNight.getMap(lat, lng).addTo(map);
 
   map.setView([lat, lng], zoomLevel);
 
@@ -60,7 +63,7 @@ module.exports.init = (lat, lng) => {
   currentLocationMarker = leaflet
     .marker([lat, lng], {
       title: 'Current Location',
-      icon: svgMarker.location
+      icon: locationMarker
     })
     .addTo(map);
 
@@ -71,6 +74,7 @@ module.exports.init = (lat, lng) => {
  * Adds and returns a marker to the map.
  */
 module.exports.addMarker = (lat, lng, title, icon, onClick) => {
+
   let marker = leaflet
     .marker([lat, lng], {
       title,
@@ -92,6 +96,10 @@ module.exports.addMarker = (lat, lng, title, icon, onClick) => {
  * Re-centre the map and update location marker
  */
 module.exports.setCurrentLocation = (lat, lng) => {
+  //updates the location marker and map icon's
+  currentLocationMarker.setIcon(dayNight.getLocation(lat, lng));
+  dayNight.getMap(lat, lng).addTo(map);
+
   currentLocationMarker.setLatLng({ lat, lng });
   map.setView([lat, lng], zoomLevel);
   log.debug(`Moved current location marker to lat=${lat}, lng=${lng}`);

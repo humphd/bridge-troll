@@ -6,6 +6,7 @@ const geo = require('./geo');
 const map = require('./map');
 const log = require('./log');
 const svgMarker = require('./svg-marker');
+const dayNight = require('./dayNight');
 
 const Bridge = require('./bridge');
 const bridges = {};
@@ -33,12 +34,14 @@ map.on('update', bounds => {
       window.open(url);
     };
 
+    var lockedMarker = dayNight.getLocked(bridge.lat,bridge.lng);
+
     // Add a new marker to the map for this bridge
     bridge.marker = map.addMarker(
       bridge.lat,
       bridge.lng,
       bridge.title,
-      svgMarker.locked,
+      lockedMarker,
       onClick
     );
   });
@@ -69,7 +72,12 @@ geo.once('update', (lat, lng) => {
       // to have some kind of animation or other UI indication.
       if (bridge.marker) {
         log.info('Unlocking bridge', bridge);
-        bridge.marker.setIcon(svgMarker.unlocked);
+
+        var unlockedMarker = dayNight.getUnlocked(bridge.lat,bridge.lng);
+
+        //need to change this to reflect
+        bridge.marker.setIcon(unlockedMarker);
+        
       }
     });
   });
@@ -111,7 +119,7 @@ const onReady = () => {
     if (!(bridge.id && bridge.lat && bridge.lng)) {
       log.warn(
         `Bridge missing data, skipping: id=${bridge.id}, lat=${
-          bridge.lat
+        bridge.lat
         }, lng=${bridge.lng}`
       );
       return;
