@@ -36,9 +36,9 @@ Via the query string, set your desired log level:
 
 ```
 http://localhost:8080/?loglevel=debug
-http://localhost:8080/loglevel=info
-http://localhost:8080/loglevel=warn
-http://localhost:8080/loglevel=error
+http://localhost:8080/?loglevel=info
+http://localhost:8080/?loglevel=warn
+http://localhost:8080/?loglevel=error
 ```
 ### Override Geolocation Data for testing
 
