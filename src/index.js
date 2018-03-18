@@ -1,5 +1,7 @@
 'use strict';
 
+require('../styles/styles.css');
+
 const geo = require('./geo');
 const map = require('./map');
 const log = require('./log');
@@ -43,7 +45,9 @@ map.on('update', bounds => {
 });
 
 // Wait until we know where we are, then show the map centred on that point
-geo.once('position', (lat, lng) => {
+geo.once('update', (lat, lng) => {
+  log.info('Got initial geolocation info, starting map UI');
+
   // Load a map, centered on our current position
   map.init(lat, lng);
 
@@ -52,7 +56,7 @@ geo.once('position', (lat, lng) => {
   document.querySelector('.loading-spinner').style.display = 'none';
 
   // Start listening for regular updates to geo position data
-  geo.on('position', (lat, lng) => {
+  geo.on('update', (lat, lng) => {
     map.setCurrentLocation(lat, lng);
 
     // Look 50m nearby for any bridges to collect
@@ -70,6 +74,33 @@ geo.once('position', (lat, lng) => {
     });
   });
 });
+
+// Deal with any errors that might happen from geolocation update requests
+geo.once('error', err => {
+  let msg;
+
+  /* permission denied */
+  if (err.code === 1) {
+    msg = 'Permission denied getting your location.';
+  } else if (err.code === 2) {
+    /* position unavailable (error response from location provider) */
+    msg = 'Location information unavailable at this time.';
+  } else if (err.code === 3) {
+    /* timed out */
+    msg = 'Timeout error getting your location.';
+  } else {
+    /* unknown error */
+    msg = 'Unable to get your location.';
+  }
+
+  msg = msg + '<br>Refresh your browser to try again.';
+
+  document.querySelector('.sk-folding-cube').style.display = 'none';
+  document.querySelector('.loading-info').innerHTML = msg;
+});
+
+// Request our current position right away
+geo.init();
 
 const onReady = () => {
   // Process our raw bridge data into an in-memory db and geo quadtree
@@ -98,9 +129,6 @@ const onReady = () => {
 
     log.debug('Added Bridge', bridge);
   });
-
-  log.info('Waiting for initial position to show map...');
-  geo.watchPosition();
 };
 
 // Wait for the DOM to be loaded before we start anything with the map UI

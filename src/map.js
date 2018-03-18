@@ -1,5 +1,6 @@
 'use strict';
 
+require('../node_modules/leaflet/dist/leaflet.css');
 const log = require('./log');
 const DisplayMode = require('./displaymode');
 
@@ -52,15 +53,7 @@ module.exports.init = (lat, lng) => {
   map.on('click', e => module.exports.emit('click', e));
   map.on('dblclick', e => module.exports.emit('dblclick', e));
   
-  let sunTimes = SunCalc.getTimes(new Date(), lat, lng)
-  DisplayMode.setMode('light');
-  
-  let now = new Date();
-
-  if (now <= sunTimes.sunriseEnd ||  now >= sunTimes.sunsetStart){
-    DisplayMode.setMode('dark');
-  }
-  
+  DisplayMode.init(lat,lng);
   let tileUrl = DisplayMode.getMode();
 
   leaflet.tileLayer(tileUrl, { attribution }).addTo(map);

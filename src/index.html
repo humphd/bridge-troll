@@ -1,18 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Bridge Troll</title>
-
-    <link rel="stylesheet" href="./style.css">
-
-    <!-- Leaflet CSS for Map UI -->
-    <link rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
-      integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
-      crossorigin="" />
-
   </head>
   <body>
     <!-- Folding Map spinner - http://tobiasahlin.com/spinkit/ -->
@@ -23,12 +14,10 @@
         <div class="sk-cube4 sk-cube"></div>
         <div class="sk-cube3 sk-cube"></div>
       </div>
+      <p class="loading-info">Finding your current location...</p>
     </div>
 
     <!-- Map div for Leaflet -->
     <div id="map"></div>
-
-    <!-- All scripts bundled as a single-file via parceljs -->
-    <script src="./index.js"></script>
   </body>
 </html>
