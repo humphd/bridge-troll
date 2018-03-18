@@ -6,7 +6,7 @@ let init = (lat, lng) => {
 
   let now = new Date();
 
-  if (now <= sunTimes.sunriseEnd || now >= sunTimes.sunsetStart) {
+  if (now <= sunTimes.sunriseEnd || now <= sunTimes.sunsetStart) {
     setMode('dark');
   } else {
     setMode('light');
