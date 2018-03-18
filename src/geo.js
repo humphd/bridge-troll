@@ -17,7 +17,6 @@ if (debug.enabled) {
   require('./fake-geolocation');
 }
 
-
 /**
  * Find all nearby points within a bounding box.  p1 and p2 should be diagonal
  * opposite points, defining the box:
