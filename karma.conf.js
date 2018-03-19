@@ -3,6 +3,9 @@
 
 const path = require('path');
 
+// Enable DEBUG so it gets passed into webpack's bundling.
+process.env.DEBUG = 1;
+
 // Reuse our existing webpack.config.js with some minor changes
 // so that we an get useful coverage info mapped to the original files.
 let webpackConfig = require('./webpack.config.js');
