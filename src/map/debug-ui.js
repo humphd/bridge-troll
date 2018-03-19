@@ -6,6 +6,12 @@ const distance = require('../distance');
 
 const leaflet = require('leaflet');
 
+const clickHandler = e => {
+  let lat = e.latlng.lat;
+  let lng = e.latlng.lng;
+  log.debug(`${lat}, ${lng}`);
+};
+
 /**
  * For debugging, we show more info, and allow interactions
  */
@@ -19,8 +25,9 @@ class DebugUI extends BaseUI {
   init(lat, lng) {
     super.init(lat, lng);
 
-    // Expose double-click for geolocation faking
+    // Expose click and double-click for geolocation faking
     this.map.on('dblclick', e => this.emit('dblclick', e));
+    this.map.on('click', clickHandler);
 
     // In debug mode, also show a radius beyond current location for collisions
     this.currentLocationDebugRadius = leaflet
@@ -50,11 +57,7 @@ class DebugUI extends BaseUI {
     title = title + ` (${lat}, ${lng})`;
 
     // Override onClick to show debug info
-    onClick = e => {
-      let lat = e.latlng.lat;
-      let lng = e.latlng.lng;
-      log.debug(`Position = ${lat}, ${lng}`);
-    };
+    onClick = clickHandler;
 
     return super.addMarker(lat, lng, title, icon, onClick);
   }
