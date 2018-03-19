@@ -3,9 +3,6 @@
 
 const path = require('path');
 
-// Force FAKE_GEO to be true, so it gets picked up by webpack
-process.env.FAKE_GEO = 1;
-
 // Reuse our existing webpack.config.js with some minor changes
 // so that we an get useful coverage info mapped to the original files.
 let webpackConfig = require('./webpack.config.js');
@@ -25,7 +22,6 @@ module.exports = function(config) {
     files: ['test/index.js'],
 
     preprocessors: {
-      'test/**/*.js': ['webpack'],
       'test/index.js': ['webpack']
     },
 
