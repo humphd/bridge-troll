@@ -9,7 +9,8 @@ const config = require('./config');
 log.setDefaultLevel('silent');
 
 // Support setting logging level via the query string ?loglevel=warn (or debug, error, info)
-if (config.loglevel) {
+const supported = ['trace', 'debug', 'info', 'warn', 'error'];
+if (config.loglevel && supported.indexOf(config.loglevel) > -1) {
   log.setLevel(config.loglevel, false);
 }
 

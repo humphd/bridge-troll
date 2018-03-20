@@ -86,6 +86,10 @@ class BaseUI extends EventEmitter {
     this.map.setView([lat, lng], this.zoomLevel);
     log.debug(`Moved current location marker to lat=${lat}, lng=${lng}`);
   }
+
+  getCurrentLocation() {
+    return this.map.getCenter();
+  }
 }
 
 module.exports = BaseUI;
