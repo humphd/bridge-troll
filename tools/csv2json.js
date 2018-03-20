@@ -5,12 +5,16 @@
 const fs = require('fs');
 const csvInput = 'data/2536_bridge_conditions.csv';
 const jsonOutput = 'data/bridge-data.json';
+const versionOutput = 'data/bridge-data-version.json';
 
 const parse = require('csv-parse');
 const transform = require('stream-transform');
 const JSONStream = require('JSONStream');
 
 const Bridge = require('../src/bridge');
+
+const crypto = require('crypto');
+const hash = crypto.createHash('md5');
 
 // Table structure for https://www.ontario.ca/data/bridge-conditions CSV file.
 // We parse, but ignore most of this.
@@ -65,8 +69,28 @@ fs
   )
   .pipe(transform(record => Bridge.fromCsvRecord(record)))
   .pipe(JSONStream.stringify())
+  .pipe(
+    transform(json => {
+      // Hash the data as we go, so we can version this
+      hash.update(json);
+      return json;
+    })
+  )
   .pipe(fs.createWriteStream(jsonOutput))
   .on('error', err =>
     console.log(`Error writing ${jsonOutput}: ${err.message}`)
   )
-  .on('finish', () => console.log(`Wrote ${jsonOutput}`));
+  .on('finish', () => {
+    // Write out the version info too
+    let versionInfo = {
+      version: hash.digest('hex'),
+      created: new Date()
+    };
+    fs.writeFile(versionOutput, JSON.stringify(versionInfo), err => {
+      if (err) {
+        console.log(`Error writing ${versionOutput}: ${err.message}`);
+        return;
+      }
+      console.log(`Wrote ${jsonOutput} and ${versionOutput}`);
+    });
+  });
