@@ -1,4 +1,5 @@
 const Bridge = require('./bridge');
+const distance = require('./distance');
 const geo = require('./geo');
 const log = require('./log');
 
@@ -34,10 +35,20 @@ module.exports.init = () => {
   });
 };
 
-module.exports.byId = id => {
-  let bridge = bridges[id];
-  if (!bridge) {
-    log.error('Unable to get bridge by id', id);
-  }
-  return bridge;
+module.exports.unlockNearby = (lat, lng) => {
+  // Look nearby for any bridges to collect
+  geo.findNearby(lat, lng, distance.COLLISION_M).forEach(id => {
+    let bridge = bridges[id];
+    log.debug('Found nearby bridge', bridge);
+    bridge.unlock();
+  });
+};
+
+module.exports.showWithin = (p1, p2) => {
+  geo.findWithin(p1, p2).forEach(id => {
+    let bridge = bridges[id];
+    log.debug('Found bridge within map bounds', bridge);
+    // Add an icon to the map for this bridge
+    bridge.show();
+  });
 };
