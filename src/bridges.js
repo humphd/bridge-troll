@@ -4,11 +4,7 @@ const TrollBridge = require('./troll-bridge');
 const distance = require('./distance');
 const geo = require('./geo');
 const log = require('./log');
-
-// See https://github.com/jakearchibald/idb-keyval#usage.
-// Also, using .default to work around webpack module loading bug:
-// https://github.com/jakearchibald/idb-keyval/issues/25
-const idbKeyval = require('idb-keyval').default;
+const db = require('./db.js');
 
 const bridgeData = require('../data/bridge-data.json');
 const bridges = {};
@@ -64,7 +60,7 @@ module.exports.showWithin = (p1, p2) => {
 module.exports.getUnlocked = () => {
   // Given a key, return a TrollBridge if it's unlocked, otherwise nothing.
   let bridgeFromKey = key => {
-    return idbKeyval.get(key).then(() => {
+    return db.get(key).then(() => {
       let id = TrollBridge.idFromIdbKey(key);
       let bridge = bridges[id];
       if (!bridge) {
@@ -77,7 +73,7 @@ module.exports.getUnlocked = () => {
   };
 
   // Get all the keys in idb, convert to
-  return idbKeyval.keys().then(keys => {
+  return db.keys().then(keys => {
     return Promise.all(keys.map(bridgeFromKey)).then(bridges =>
       // In case we somehow got odd keys, remove empty bridges from array
       bridges.filter(bridge => !!bridge)

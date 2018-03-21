@@ -4,11 +4,7 @@ const Bridge = require('./bridge');
 const log = require('./log');
 const map = require('./map');
 const svgMarker = require('./svg-marker');
-
-// See https://github.com/jakearchibald/idb-keyval#usage.
-// Also, using .default to work around webpack module loading bug:
-// https://github.com/jakearchibald/idb-keyval/issues/25
-const idbKeyval = require('idb-keyval').default;
+const db = require('./db');
 
 /**
  * A decorated Bridge type, with extra behaviour for interacting on the map.
@@ -70,7 +66,7 @@ class TrollBridge extends Bridge {
 
     // See if the user has already collected this bridge (check idb)
     // before and use locked or unlocked icon depending on the answer.
-    idbKeyval
+    db
       .get(bridge.idbKey)
       .then(val => {
         if (val) {
@@ -100,7 +96,7 @@ class TrollBridge extends Bridge {
     }
 
     // Set key in idb indicating that we've collected this bridge
-    idbKeyval
+    db
       .set(bridge.idbKey, new Date())
       .then(() => {
         bridge.marker.setIcon(svgMarker.unlocked);
