@@ -89,6 +89,10 @@ class BaseUI extends EventEmitter {
   getCurrentLocation() {
     return this.map.getCenter();
   }
+
+  redraw() {
+    this.map.invalidateSize();
+  }
 }
 
 module.exports = BaseUI;

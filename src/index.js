@@ -5,6 +5,7 @@ require('../styles/styles.css');
 const log = require('./log');
 const geo = require('./geo');
 const map = require('./map');
+const view = require('./view');
 const bridges = require('./bridges');
 
 // Listen for updates to the map's bounding box (viewable area)
@@ -23,12 +24,8 @@ geo.once('update', (lat, lng) => {
   // Load a map, centered on our current position
   map.init(lat, lng);
 
-  // Stop showing the startup spinner now that map is drawn
-  log.info('Removing loading spinner');
-  let loadingSpinner = document.querySelector('.loading-spinner');
-  if (loadingSpinner) {
-    loadingSpinner.style.display = 'none';
-  }
+  // Initialize the view logic
+  view.init();
 
   // Start listening for regular updates to geo position data
   geo.on('update', (lat, lng) => {
@@ -73,4 +70,6 @@ geo.once('error', err => {
 geo.init();
 
 // Wait for the DOM to be loaded before we start anything with the map UI
-document.addEventListener('DOMContentLoaded', bridges.init);
+document.addEventListener('DOMContentLoaded', () => {
+  bridges.init();
+});

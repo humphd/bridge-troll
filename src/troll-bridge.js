@@ -19,6 +19,11 @@ class TrollBridge extends Bridge {
     return `bridge::${this.id}`;
   }
 
+  // Turn an IDB Key back into an ID
+  static idFromIdbKey(key) {
+    return key.replace(/bridge::/, '');
+  }
+
   get streetViewUrl() {
     let lat = this.lat;
     let lng = this.lng;
@@ -28,8 +33,14 @@ class TrollBridge extends Bridge {
   }
 
   get cardUrl() {
-    // The unique card image for this bridge
+    // The unique card image URL for this bridge
     return `../data/cards/${this.id}.svg`;
+  }
+
+  get cardImgEl() {
+    let img = document.createElement('img');
+    img.src = this.cardUrl;
+    return img;
   }
 
   // Show the appropriate icon for this bridge: locked or unlocked, depending
