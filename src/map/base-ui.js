@@ -60,21 +60,20 @@ class BaseUI extends EventEmitter {
    * @param {*} icon icon to use
    * @param {*} onClick optional onClick handler
    */
-  addMarker(lat, lng, title, icon, onClick) {
+  addMarker(lat, lng, title, icon, cardUrl, streetViewUrl) {
     let marker = leaflet
       .marker([lat, lng], {
         title,
         icon
       })
+      .bindPopup(`<img src="${cardUrl}">`)
       .addTo(this.map);
 
-    // Wire-up a click handler for this marker
-    if (onClick) {
-      marker.on('click', onClick);
-    }
+    // Wire-up a click handlers for this marker
+    marker.on('click', () => marker.openPopup());
+    marker.on('dblclick', () => window.open(streetViewUrl));
 
     log.debug(`Added marker title=${title} at lat=${lat}, lng=${lng}`);
-
     return marker;
   }
 

@@ -57,6 +57,9 @@ const columns = [
   '2000'
 ];
 
+// We use our own integer id
+let id = 0;
+
 fs
   .createReadStream(csvInput)
   .pipe(
@@ -67,7 +70,13 @@ fs
       trim: true // trim surrounding whitespace
     })
   )
-  .pipe(transform(record => Bridge.fromCsvRecord(record)))
+  .pipe(
+    transform(record => {
+      // Throw away the ID and use our normalized id
+      record['id'] = id++;
+      return Bridge.fromCsvRecord(record);
+    })
+  )
   .pipe(JSONStream.stringify())
   .pipe(
     transform(json => {

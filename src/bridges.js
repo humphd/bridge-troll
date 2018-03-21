@@ -1,4 +1,6 @@
-const Bridge = require('./bridge');
+'use strict';
+
+const TrollBridge = require('./troll-bridge');
 const distance = require('./distance');
 const geo = require('./geo');
 const log = require('./log');
@@ -9,7 +11,7 @@ const bridges = {};
 // Process our raw bridge data into an in-memory db and geo quadtree
 module.exports.init = () => {
   bridgeData.forEach(record => {
-    let bridge = Bridge.fromObject(record);
+    let bridge = TrollBridge.fromObject(record);
 
     // Deal with invalid data in the dataset (not all bridges have lat/lng)
     if (!(bridge.id && bridge.lat && bridge.lng)) {

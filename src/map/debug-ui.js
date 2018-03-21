@@ -50,17 +50,6 @@ class DebugUI extends BaseUI {
     // Update the collision debug radius too
     this.currentLocationDebugRadius.setLatLng({ lat, lng });
   }
-
-  // Adds and returns a marker to the map.
-  addMarker(lat, lng, title, icon, onClick) {
-    // Show lat/lng info in debug mode.
-    title = title + ` (${lat}, ${lng})`;
-
-    // Override onClick to show debug info
-    onClick = clickHandler;
-
-    return super.addMarker(lat, lng, title, icon, onClick);
-  }
 }
 
 module.exports = DebugUI;

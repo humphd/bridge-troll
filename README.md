@@ -86,8 +86,14 @@ See below for other ways to run these.
 You can use various `npm scripts` to help accomplishing things:
 
 ```
+npm run generate-bridges
+    runs both generate-bridge-json and generate-bridge-cards
+
 npm run generate-bridge-json
     parse data/2536_bridge_conditions.csv into data/bridge-data.json
+
+npm run generate-bridge-cards
+    create cards/*.svg for all images based on data/bridge-data.json and images/*.svg
 
 npm run build
     bundle index.html into dist/ (suitable for production)
