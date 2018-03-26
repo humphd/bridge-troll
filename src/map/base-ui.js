@@ -2,11 +2,11 @@
 
 const log = require('../log');
 const svgMarker = require('../svg-marker');
+const switchModes = require('../modes/light-dark');
 
 const leaflet = require('leaflet');
 const EventEmitter = require('events').EventEmitter;
 
-const tileUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
 const attribution =
   '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
@@ -26,10 +26,11 @@ class BaseUI extends EventEmitter {
     let mapEl = document.createElement('div');
     mapEl.id = 'map';
     document.body.appendChild(mapEl);
+    let tileUrl = new switchModes(lat, lng);
 
     // http://leafletjs.com/reference-1.3.0.html#map
     let map = (this.map = leaflet.map(mapEl, this.options));
-    leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
+    leaflet.tileLayer(tileUrl.currentMode, { attribution }).addTo(map);
     map.setView([lat, lng], defaultZoomLevel);
 
     // http://leafletjs.com/reference-1.3.0.html#map-event
