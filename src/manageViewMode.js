@@ -17,7 +17,7 @@ function updateMode(lat, lng) {
     if (currentTime <= allTimes.sunrise || currentTime >= allTimes.sunset) {
         currentMode = "night";
     } else {
-        currentMode = "night";
+        currentMode = "daylight";
     }
 }
 
