@@ -6,13 +6,13 @@ const leaflet = require('leaflet');
 const manageViewMode = require('./manageViewMode');
 
 // Read contents of SVG files from bundle as Data URLs
-var locationSvgUrl = require('../icons/material-icons/location.svg');
-var lockedSvgUrl = require('../icons/material-icons/locked.svg');
-var unlockedSvgUrl = require('../icons/material-icons/unlocked.svg');
+const locationSvgUrl = require('../icons/material-icons/location.svg');
+const lockedSvgUrl = require('../icons/material-icons/locked.svg');
+const unlockedSvgUrl = require('../icons/material-icons/unlocked.svg');
 
-var locationSvgUrlWhite = require('../icons/material-icons/locationWhite.svg');
-var lockedSvgUrlWhite = require('../icons/material-icons/lockedWhite.svg');
-var unlockedSvgUrlWhite = require('../icons/material-icons/unlockedWhite.svg');
+const locationSvgUrlWhite = require('../icons/material-icons/locationWhite.svg');
+const lockedSvgUrlWhite = require('../icons/material-icons/lockedWhite.svg');
+const unlockedSvgUrlWhite = require('../icons/material-icons/unlockedWhite.svg');
 // All icons share the same size, define it once
 const iconSize = [25, 25];
 

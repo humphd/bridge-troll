@@ -7,7 +7,7 @@
     "generate-bridge-cards": "node tools/generate-cards.js",
     "generate-bridges": "npm run generate-bridge-json && npm run generate-bridge-cards",
     "build": "webpack --mode production",
-    "eslint": "eslint tools src test",
+    "eslint": "eslint --fix tools src test",
     "prettier": "prettier --single-quote --write \"{tools,src,test}/**/*.{js,css}\"",
     "check-prettier": "prettier --single-quote --list-different \"{tools,src,test}/**/*.{js,css}\"",
     "coverage": "opn coverage/index.html",
