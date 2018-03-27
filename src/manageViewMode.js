@@ -17,7 +17,7 @@ function updateMode(lat, lng) {
     if (currentTime <= allTimes.sunrise || currentTime >= allTimes.sunset) {
         currentMode = "night";
     } else {
-        currentMode = "daylight";
+        currentMode = "night";
     }
 }
 
@@ -27,11 +27,14 @@ function getTileSet() {
         //use day tile set
         tileSet = 'https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}';
     } else {
-        //use night tile set
-        tileSet = 'https://korona.geog.uni-heidelberg.de/tiles/roadsg/x={x}&y={y}&z={z}';
+        //use night tile set        
+        //tileSet ='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'
+        tileSet = 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png';
+        //tileSet = 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png';
     }
     return tileSet;
 }
+
 module.exports = {
     init,
     getMode,

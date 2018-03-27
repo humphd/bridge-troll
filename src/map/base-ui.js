@@ -39,7 +39,8 @@ class BaseUI extends EventEmitter {
     let onMapChange = () => this.emit('update', map.getBounds());
     map.on('viewreset', onMapChange);
     map.on('moveend', onMapChange);
-
+    
+    log.info(svgMarker.location);
     // Show a marker at our current location
     this.currentLocationMarker = leaflet
       .marker([lat, lng], {
