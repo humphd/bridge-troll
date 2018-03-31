@@ -9,7 +9,8 @@ const EventEmitter = require('events').EventEmitter;
 import { MapMode } from './map-mode';
 var mapMode = new MapMode();
 
-const tileUrl = mapMode.tileUrl;
+// Changed tileUrl to dynamic variable
+let tileUrl = mapMode.tileUrl;
 const attribution = mapMode.attribution;
   
 
@@ -32,6 +33,10 @@ class BaseUI extends EventEmitter {
 
     // http://leafletjs.com/reference-1.3.0.html#map
     let map = (this.map = leaflet.map(mapEl, this.options));
+    // apetov:
+    mapMode.switchMode(lat, lng);
+    tileUrl = mapMode.tileUrl;
+    // 
     leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
     map.setView([lat, lng], defaultZoomLevel);
 
