@@ -60,11 +60,14 @@ const useCardsView = () => {
 };
 
 module.exports.init = () => {
-  viewButton = document.querySelector('#view-button');
-  mapView = document.querySelector('#map');
-  cardsView = document.querySelector('#cards');
-  loadingSpinner = document.querySelector('.loading-spinner');
-  noCardsWarning = document.querySelector('#no-cards-warning');
+  // In testing, UI elements don't exist, so just shim with a <div>.
+  const testElem = document.createElement('div');
+
+  viewButton = document.querySelector('#view-button') || testElem;
+  mapView = document.querySelector('#map') || testElem;
+  cardsView = document.querySelector('#cards') || testElem;
+  loadingSpinner = document.querySelector('.loading-spinner') || testElem;
+  noCardsWarning = document.querySelector('#no-cards-warning') || testElem;
 
   // Stop showing the startup spinner now that map is drawn
   log.info('Removing loading spinner');

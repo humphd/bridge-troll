@@ -3,10 +3,10 @@
 // A lot of the bridge names have odd spacing characters
 const cleanName = name => {
   return name
-    .replace(/\.{2,}/, '') // get rid of ......
-    .replace(/\s{2,}/, '') // get rid of multiple spaces
-    .replace(/-{2,}/, '') // get rid of ------
-    .replace(/\r?\n/, ' '); // get rid of embedded line breaks
+    .replace(/\.{2,}/g, '') // get rid of ......
+    .replace(/\s{2,}/g, '') // get rid of multiple spaces
+    .replace(/-{2,}/g, '') // get rid of ------
+    .replace(/\r?\n/g, ''); // get rid of embedded line breaks
 };
 
 class Bridge {
