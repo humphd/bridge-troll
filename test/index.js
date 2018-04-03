@@ -4,6 +4,9 @@
  * Testing with webpack + coverage - https://webpack.js.org/loaders/istanbul-instrumenter-loader/
  */
 
+// Force debug mode
+//process.env.DEBUG = 1;
+
 // requires all tests in `test/**/*.js`
 const tests = require.context('./', true, /\.js$/);
 

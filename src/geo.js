@@ -10,10 +10,11 @@ module.exports = new EventEmitter();
 
 // Quadtree API docs at https://github.com/salsita/geo-tree
 const GeoTree = require('geo-tree');
-const set = new GeoTree();
+let set;
 
 // Override of the geolocation API.
 if (debug.enabled) {
+  log.debug('Enabling fake-geolocation in geo.js');
   require('./fake-geolocation');
 }
 
@@ -74,6 +75,7 @@ module.exports.init = () => {
     return;
   }
 
+  set = new GeoTree();
   navigator.geolocation.watchPosition(geoSuccessHandler, geoErrorHandler);
   log.info('Starting to watch for geolocation position updates');
 };

@@ -8,18 +8,26 @@ log.info(
   'Override Geolocation. Use `window.fakeGeo` in console or double-click map to move'
 );
 
-const setStartupPosition = () => {
+const setStartupPosition = success => {
+  let lat;
+  let lng;
+
   // If ?lat=...&lng=... is set on query string, use that
   if (config.lat && config.lng) {
     log.debug(`Using initial position lat=${config.lat}, lng=${config.lng}`);
-    window.fakeGeo.moveTo(config.lat, config.lng);
+    lat = config.lat;
+    lng = config.lng;
   } else {
     // Otherwise use Seneca@York as default
     log.debug(
       'Using Seneca@York for initial position. Use ?lat=...&lng=... to override'
     );
-    window.fakeGeo.moveTo(43.7713, -79.4989);
+    lat = 43.7713;
+    lng = -79.4989;
   }
+
+  let position = { coords: { latitude: lat, longitude: lng } };
+  success(position);
 };
 
 const callbacks = [];
@@ -27,12 +35,12 @@ const callbacks = [];
 // Replace native geolocation methods with our own, caching original
 navigator.geolocation.watchPosition = (success, error) => {
   let watchId = callbacks.length;
+
+  // Cache these callbacks so we can call them later in response to moveTo or simulateError
   callbacks.push({ success, error });
 
-  // If this is the first callback added, fire an initial position update
-  if (callbacks.length === 1) {
-    setStartupPosition();
-  }
+  // Trigger an initial position update, since geo.init() will expect it
+  setStartupPosition(success);
 
   return watchId;
 };
