@@ -50,6 +50,10 @@ module.exports.unlockNearby = (lat, lng) => {
 module.exports.showWithin = (p1, p2) => {
   geo.findWithin(p1, p2).forEach(id => {
     let bridge = bridges[id];
+    if (!bridge) {
+      log.warn(`Unable to get bridge record for bridge id=${id}, skipping.`);
+      return;
+    }
     log.debug('Found bridge within map bounds', bridge);
     // Add an icon to the map for this bridge
     bridge.show();
@@ -64,7 +68,7 @@ module.exports.getUnlocked = () => {
       let id = TrollBridge.idFromIdbKey(key);
       let bridge = bridges[id];
       if (!bridge) {
-        log.debug(
+        log.warn(
           `Unexpected key found for unlocked bridges: id=${id}, key=${key}`
         );
       }
