@@ -66,22 +66,16 @@ class TrollBridge extends Bridge {
 
     // See if the user has already collected this bridge (check idb)
     // before and use locked or unlocked icon depending on the answer.
-    db
-      .get(bridge.idbKey)
-      .then(val => {
-        if (val) {
-          addMarker(svgMarker.unlocked);
-        } else {
-          addMarker(svgMarker.locked);
-        }
-        callback(null);
-      })
-      .catch(err => {
-        log.error(`Unable to read key '${bridge.idbkey}' from idb: ${err}`);
+    bridge.isUnlocked((err, unlocked) => {
+      if (err) {
         // Default to locked so we at least show something
         addMarker(svgMarker.locked);
-        callback(err);
-      });
+        return callback(err);
+      }
+
+      addMarker(unlocked ? svgMarker.unlocked : svgMarker.locked);
+      callback(null);
+    });
   }
 
   // The user has collected this bridge, unlock it and persist to idb
@@ -105,6 +99,17 @@ class TrollBridge extends Bridge {
       })
       .catch(err => {
         log.error(`Unable to set key '${bridge.idbkey}' in idb: ${err}`);
+        callback(err);
+      });
+  }
+
+  isUnlocked(callback) {
+    let bridge = this;
+    db
+      .get(bridge.idbKey)
+      .then(val => callback(null, !!val))
+      .catch(err => {
+        log.error(`Unable to read key '${bridge.idbkey}' from idb: ${err}`);
         callback(err);
       });
   }
