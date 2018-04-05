@@ -7,6 +7,7 @@ const geo = require('./geo');
 const map = require('./map');
 const view = require('./view');
 const bridges = require('./bridges');
+const dayNightMode = require('./day-night-mode');
 
 // Listen for updates to the map's bounding box (viewable area)
 map.on('update', bounds => {
@@ -20,6 +21,9 @@ map.on('update', bounds => {
 // Wait until we know where we are, then show the map centred on that point
 geo.once('update', (lat, lng) => {
   log.info('Got initial geolocation info, starting map UI');
+
+  //Initialize current mode
+  dayNightMode.init();
 
   // Load a map, centered on our current position
   map.init(lat, lng);
@@ -72,4 +76,12 @@ geo.init();
 // Wait for the DOM to be loaded before we start anything with the map UI
 document.addEventListener('DOMContentLoaded', () => {
   bridges.init();
+});
+
+dayNightMode.on('modeChanged', () => {
+  map.updateLocationIcon();
+  map.updateMap();
+  let bounds = map.map.getBounds();
+  //Update all locks icons
+  bridges.showWithin(bounds._northEast, bounds._southWest);
 });

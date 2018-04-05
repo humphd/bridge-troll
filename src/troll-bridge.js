@@ -3,7 +3,7 @@
 const Bridge = require('./bridge');
 const log = require('./log');
 const map = require('./map');
-const svgMarker = require('./svg-marker');
+const dayNightMode = require('./day-night-mode');
 const db = require('./db');
 
 /**
@@ -45,8 +45,15 @@ class TrollBridge extends Bridge {
     let bridge = this;
     callback = callback || function() {};
 
-    // Don't add a marker for this bridge if we already have one.
+    // Don't add a marker for this bridge if we already have one, but update it if display mode was changed
     if (bridge.marker) {
+      bridge.isUnlocked((err, unlocked) => {
+        bridge.marker.setIcon(
+          unlocked
+            ? dayNightMode.getUnlockedIcon()
+            : dayNightMode.getLockedIcon()
+        );
+      });
       log.debug('Skipping adding bridge marker, already exists');
       return;
     }
@@ -69,11 +76,13 @@ class TrollBridge extends Bridge {
     bridge.isUnlocked((err, unlocked) => {
       if (err) {
         // Default to locked so we at least show something
-        addMarker(svgMarker.locked);
+        addMarker(dayNightMode.getLockedIcon());
         return callback(err);
       }
 
-      addMarker(unlocked ? svgMarker.unlocked : svgMarker.locked);
+      addMarker(
+        unlocked ? dayNightMode.getUnlockedIcon() : dayNightMode.getLockedIcon()
+      );
       callback(null);
     });
   }
@@ -93,7 +102,7 @@ class TrollBridge extends Bridge {
     db
       .set(bridge.idbKey, new Date())
       .then(() => {
-        bridge.marker.setIcon(svgMarker.unlocked);
+        bridge.marker.setIcon(dayNightMode.getUnlockedIcon());
         log.info('Unlocked bridge', bridge);
         callback(null);
       })
