@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 'use strict';
 
 // Map the bridge records (by numeric id) to an image card

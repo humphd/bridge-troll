@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 'use strict';
 
 // Parse the CSV file, filter out unnecessary columns, and write as JSON
