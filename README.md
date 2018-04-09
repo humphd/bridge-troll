@@ -1,5 +1,7 @@
 A friendly troll that lives under Ontario's bridges.
 
+![](https://travis-ci.org/humphd/bridge-troll.svg?branch=master)
+
 ## Introduction
 
 `bridge-troll` is a browser based geolocation game based on open bridge data in
