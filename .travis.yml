@@ -12,7 +12,7 @@ before_install:
 
 before_deploy:
   - npm run build
-  - git add dist -f
+  - echo "node_modules\n" > .gitignore
 deploy:
   provider: pages
   skip-cleanup: true
