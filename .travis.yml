@@ -12,7 +12,7 @@ before_install:
 
 before_deploy:
   - npm run build
-  - echo "node_modules\n" > .gitignore
+  - echo "node_modules" > .gitignore
 deploy:
   provider: pages
   skip-cleanup: true
