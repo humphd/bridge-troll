@@ -12,6 +12,7 @@ before_install:
 
 before_deploy:
   - npm run build
+  - git add dist -f
 deploy:
   provider: pages
   skip-cleanup: true
