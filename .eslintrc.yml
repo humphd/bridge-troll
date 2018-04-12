@@ -1,0 +1,17 @@
+env:
+  browser: true
+  node: true
+  es6: true
+  mocha: true
+extends: 'eslint:recommended'
+plugins:
+  - mocha
+  - chai-assert-bdd
+rules:
+  linebreak-style:
+    - error
+    - unix
+  no-console:
+    - warn
+  mocha/no-exclusive-tests:
+    - error
