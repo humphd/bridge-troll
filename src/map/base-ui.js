@@ -6,9 +6,13 @@ const svgMarker = require('../svg-marker');
 const leaflet = require('leaflet');
 const EventEmitter = require('events').EventEmitter;
 
-const tileUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
-const attribution =
-  '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>';
+import { MapMode } from './map-mode';
+var mapMode = new MapMode();
+
+// Changed tileUrl to dynamic variable
+let tileUrl = mapMode.tileUrl;
+const attribution = mapMode.attribution;
+  
 
 // TODO: I'm not sure what the ideal zoom level is.  Leaflet often uses 13
 // in docs and tutorials.  14 seems to provide a bit more context
@@ -29,6 +33,10 @@ class BaseUI extends EventEmitter {
 
     // http://leafletjs.com/reference-1.3.0.html#map
     let map = (this.map = leaflet.map(mapEl, this.options));
+    // apetov:
+    mapMode.switchMode(lat, lng);
+    tileUrl = mapMode.tileUrl;
+    // 
     leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
     map.setView([lat, lng], defaultZoomLevel);
 
