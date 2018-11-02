@@ -2,11 +2,11 @@
 
 const log = require('../log');
 const svgMarker = require('../svg-marker');
-
+const manageViewMode = require('../manageViewMode');
 const leaflet = require('leaflet');
 const EventEmitter = require('events').EventEmitter;
 
-const tileUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+let tileUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
 const attribution =
   '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
@@ -29,6 +29,9 @@ class BaseUI extends EventEmitter {
 
     // http://leafletjs.com/reference-1.3.0.html#map
     let map = (this.map = leaflet.map(mapEl, this.options));
+    manageViewMode.init(lat, lng);
+    log.info(manageViewMode.getTileSet());
+    tileUrl = manageViewMode.getTileSet();
     leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
     map.setView([lat, lng], defaultZoomLevel);
 
@@ -36,7 +39,8 @@ class BaseUI extends EventEmitter {
     let onMapChange = () => this.emit('update', map.getBounds());
     map.on('viewreset', onMapChange);
     map.on('moveend', onMapChange);
-
+    
+    log.info(svgMarker.location);
     // Show a marker at our current location
     this.currentLocationMarker = leaflet
       .marker([lat, lng], {
