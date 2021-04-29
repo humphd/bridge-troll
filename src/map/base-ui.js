@@ -1,14 +1,10 @@
 'use strict';
 
 const log = require('../log');
-const svgMarker = require('../svg-marker');
+const dayNightMode = require('../day-night-mode');
 
 const leaflet = require('leaflet');
 const EventEmitter = require('events').EventEmitter;
-
-const tileUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
-const attribution =
-  '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
 // TODO: I'm not sure what the ideal zoom level is.  Leaflet often uses 13
 // in docs and tutorials.  14 seems to provide a bit more context
@@ -29,7 +25,9 @@ class BaseUI extends EventEmitter {
 
     // http://leafletjs.com/reference-1.3.0.html#map
     let map = (this.map = leaflet.map(mapEl, this.options));
-    leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
+    let tile = dayNightMode.getMap();
+    let attribution = tile.attr;
+    this.tileLayer = leaflet.tileLayer(tile.URL, { attribution }).addTo(map);
     map.setView([lat, lng], defaultZoomLevel);
 
     // http://leafletjs.com/reference-1.3.0.html#map-event
@@ -41,7 +39,7 @@ class BaseUI extends EventEmitter {
     this.currentLocationMarker = leaflet
       .marker([lat, lng], {
         title: 'Current Location',
-        icon: svgMarker.location
+        icon: dayNightMode.getLocationIcon()
       })
       .addTo(map);
 
@@ -84,6 +82,16 @@ class BaseUI extends EventEmitter {
     this.currentLocationMarker.setLatLng({ lat, lng });
     this.map.setView([lat, lng], this.zoomLevel);
     log.debug(`Moved current location marker to lat=${lat}, lng=${lng}`);
+  }
+
+  updateMap() {
+    let tile = dayNightMode.getMap();
+    this.tileLayer.setUrl(tile.URL);
+    this.tileLayer.attribution = tile.attribution;
+  }
+
+  updateLocationIcon() {
+    this.currentLocationMarker.setIcon(dayNightMode.getLocationIcon());
   }
 
   getCurrentLocation() {

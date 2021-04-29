@@ -5,25 +5,47 @@
 const leaflet = require('leaflet');
 
 // Read contents of SVG files from bundle as Data URLs
-const locationSvgUrl = require('../icons/material-icons/location.svg');
-const lockedSvgUrl = require('../icons/material-icons/locked.svg');
-const unlockedSvgUrl = require('../icons/material-icons/unlocked.svg');
+
+//Day mode
+const locationSvgUrlDay = require('../icons/material-icons/location.svg');
+const lockedSvgUrlDay = require('../icons/material-icons/locked.svg');
+const unlockedSvgUrlDay = require('../icons/material-icons/unlocked.svg');
+
+//Night mode
+const locationSvgUrlNight = require('../icons/material-icons/location_w.svg');
+const lockedSvgUrlNight = require('../icons/material-icons/locked_w.svg');
+const unlockedSvgUrlNight = require('../icons/material-icons/unlocked_w.svg');
 
 // All icons share the same size, define it once
 const iconSize = [25, 25];
 
 // Expose custom Leaflet Icons to be used in our markers
-module.exports.location = leaflet.icon({
-  iconUrl: locationSvgUrl,
+module.exports.locationDay = leaflet.icon({
+  iconUrl: locationSvgUrlDay,
   iconSize
 });
 
-module.exports.locked = leaflet.icon({
-  iconUrl: lockedSvgUrl,
+module.exports.lockedDay = leaflet.icon({
+  iconUrl: lockedSvgUrlDay,
   iconSize
 });
 
-module.exports.unlocked = leaflet.icon({
-  iconUrl: unlockedSvgUrl,
+module.exports.unlockedDay = leaflet.icon({
+  iconUrl: unlockedSvgUrlDay,
+  iconSize
+});
+
+module.exports.locationNight = leaflet.icon({
+  iconUrl: locationSvgUrlNight,
+  iconSize
+});
+
+module.exports.lockedNight = leaflet.icon({
+  iconUrl: lockedSvgUrlNight,
+  iconSize
+});
+
+module.exports.unlockedNight = leaflet.icon({
+  iconUrl: unlockedSvgUrlNight,
   iconSize
 });
