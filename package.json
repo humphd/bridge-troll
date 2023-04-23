@@ -61,7 +61,7 @@
     "unzip": "^0.1.11",
     "url-loader": "^1.0.1",
     "webpack": "^4.1.1",
-    "webpack-cli": "^2.0.12",
+    "webpack-cli": "^5.0.2",
     "webpack-dev-server": "^3.1.1"
   },
   "dependencies": {
